@@ -171,6 +171,11 @@ $swipe-left-time: .5s;
         margin-left: -10px;
       }
     }
+    @media screen and (min-width: 1600px) {
+      .material-icons {
+        margin-top: 720%;
+      }
+    }
   }
   .film-wrap {
     height: 157.5px;

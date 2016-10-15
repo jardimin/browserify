@@ -175,6 +175,11 @@ header {
     overflow: hidden;
   }
 }
+@media screen and (min-width: 1600px) {
+  main {
+    top: 47%;
+  }
+}
 
 $swipe-top-time: .3s ease 1s;
 $swipe-top-2-time: .5s ease .5s;
