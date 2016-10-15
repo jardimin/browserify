@@ -12,16 +12,17 @@
     </transition>
 
     <transition name="fade">
-      <router-view v-if="loaded" :hipervideos="hipervideos" :loaded="loaded" class="view" v-on:open-drawer="openDrawer"></router-view>
+      <router-view v-if="loaded" :hipervideos="hipervideos" :loaded="loaded" :device="device" class="view" v-on:open-drawer="openDrawer"></router-view>
     </transition>
+
+    <user :board="board" v-on:connected="connect"></user>
     
   </div>
 </template>
 
 <script>
-import Trello from 'node-trello'
-const t = new Trello("47ba9fe4f814b2a8ebaaa862a6c86a74");
 import Drawer from './components/drawer.vue'
+import User from './components/user.vue'
 
 export default {
   watch: {
@@ -39,23 +40,36 @@ export default {
       board: 'O62BDMJt',
       hipervideos: [],
       view: '',
+      connected: false,
       loaded: false,
-      drawer: false
+      drawer: false,
+      device: false
     }
   },
 
   methods: {
     openDrawer () {
       this.drawer = !this.drawer
+    },
+    connect () {
+      this.connected = true
     }
   },
 
   created: function() {
     this.$nextTick( () => {
+      if (navigator.userAgent.match(/Tablet|iPad/i))
+      {
+          this.device = true
+      } else if(navigator.userAgent.match(/IEMobile|Windows Phone|Lumia|Android|webOS|iPhone|iPod|Blackberry|PlayBook|BB10|Mobile Safari|Opera Mini|\bCrMo\/|Opera Mobi/i) )
+      {
+          this.device = true
+      } else {
+          this.device = false
+      }
 
       this.view = this.$route.path.split('/')[1]
-      t.get(`/1/boards/${this.board}/lists`, (err, data) => {
-        if (err) throw err
+      Trello.get(`/boards/${this.board}/lists`, (data) => {
         for (var i = 0; i < data.length; i++) {
           this.hipervideos.push(data[i].id)
         }
@@ -73,7 +87,8 @@ export default {
   },
 
   components: {
-    Drawer
+    Drawer,
+    User
   }
 
 }

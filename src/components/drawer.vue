@@ -7,6 +7,9 @@
             <componet :is="view"></componet>
 
         </div>
+        <div class="mdl-cell mdl-cell--12-col" style="margin: 0;">
+
+        </div>
       </div>
     </div>
     <div class="mdl-layout__obfuscator" :class="{'is-visible': drawer}" @click="openDrawer"></div>
@@ -15,8 +18,6 @@
 </template>
 
 <script>
-import Trello from 'node-trello'
-const t = new Trello("47ba9fe4f814b2a8ebaaa862a6c86a74");
 import Home from './home-drawer.vue'
 import Hipervideo from './hipervideo-drawer.vue'
 
@@ -34,7 +35,6 @@ export default {
 
   created: function() {
     this.$nextTick( () => {
-      
       
     })
   },

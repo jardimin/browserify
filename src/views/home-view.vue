@@ -2,7 +2,7 @@
   <div class="home">
     <div v-if="loaded" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <transition name="swipe-top-2">
-        <carousel v-show="ready" :films="films" :ready="ready" ref="carousel" v-on:slide="changeVideo" v-on:right="right" v-on:left="left"></carousel>
+        <carousel v-show="ready" :films="films" :ready="ready" :device="device" ref="carousel" v-on:slide="changeVideo" v-on:right="right" v-on:left="left"></carousel>
       </transition>
       <transition name="swipe-top">
         <header v-show="ready" class="mdl-layout__header">
@@ -33,8 +33,6 @@
 </template>
 
 <script>
-import Trello from 'node-trello'
-const t = new Trello("47ba9fe4f814b2a8ebaaa862a6c86a74");
 import _ from 'underscore'
 
 import Carousel from '../components/home-carousel.vue'
@@ -45,7 +43,8 @@ import Info from '../components/home-body-info.vue'
 export default {
   props: {
     loaded: Boolean,
-    hipervideos: Array
+    hipervideos: Array,
+    device: Boolean
   },
 
   data () {
@@ -69,10 +68,13 @@ export default {
     },
     films: function (val, oldVal) {
       console.log(val.length)
-      if (val.length === this.hipervideos.length) {
+      if (val.length === this.hipervideos.length && val.length === oldVal.length) {
         this.ready = true
         console.log('ready')
       }
+    },
+    ready: function (val, oldVal) {
+      this.films = _.sortBy(this.films, 'index')
     }
   },
 
@@ -81,9 +83,9 @@ export default {
       this.$emit('open-drawer')
     },
     changeVideo () {
-      this.id = this.$refs.carousel.carousel[2].card
+      this.id = this.$refs.carousel.carousel[this.device ? 2 : 0].card
       this.atual = _.findWhere(this.films, {card: this.id})
-      this.$router.push(`/home/${this.$refs.carousel.carousel[2].card}/${this.body}`)
+      this.$router.push(`/home/${this.id}/${this.body}`)
     },
     right () {
       this.direcao = 'right'
@@ -96,8 +98,7 @@ export default {
   mounted: function() {
     this.$nextTick( () => {
       for (let i in this.hipervideos) {
-        t.get(`/1/lists/${this.hipervideos[i]}/cards`, (err, data) => {
-          if (err) throw err;
+        Trello.get(`/lists/${this.hipervideos[i]}/cards`, (data) => {
           let headers = _.findWhere(data, { "name": "headers" })
           let film = {}
           let props = JSON.parse(headers.desc)
@@ -129,17 +130,50 @@ export default {
 <style lang="scss">
 header {
   position: relative;
+  @media screen and (min-width: 1024px) {
+    position: absolute;
+    top: 40%;
+    padding-left: 3% !important;
+    width: 48% !important;
+  }
 }
 .mdl-layout__tab-bar-container {
   height: 56px;
+  @media screen and (min-width: 1024px) {
+    height: 64px;
+  }
   .mdl-layout__tab {
     @media screen and (max-width: 1024px) {
       padding: 4px 12px;
     }
   }
+  .mdl-layout__tab-bar {
+    @media screen and (min-width: 1024px) {
+      padding-top: 10px;
+      .mdl-layout__tab {
+        height: 54px;
+      }
+    }
+  }
 }
 .page-content {
   height: 50px;
+}
+@media screen and (min-width: 1024px) {
+  main {
+    position: absolute !important;
+    top: 49%;
+    padding-left: 5%;
+    height: 100%;
+    width: 40%;
+    background: rgba(0,0,0,0.8);
+    p {
+      color: white;
+    }
+  }
+  .mdl-layout {
+    overflow: hidden;
+  }
 }
 
 $swipe-top-time: .3s ease 1s;
@@ -152,12 +186,23 @@ $appear: .3s ease 1.5s;
   height: 56px;
   min-height: 56px;
   overflow: hidden;
+  @media screen and (min-width: 1024px) {
+    transition: width .5s;
+    height: 64px;
+    min-height: 64px;
+  }
 }
 .swipe-top-enter, .swipe-top-leave-active {
   transition: height $swipe-top-time, min-height $swipe-top-time;
   overflow: hidden;
   height: 0;
   min-height: 0;
+  @media screen and (min-width: 1024px) {
+    transition: width .5s;
+    height: 64px;
+    min-height: 64px;
+    width: 70px !important;
+  }
 }
 
 .body-fade-enter-active, .body-fade-leave {
@@ -187,11 +232,27 @@ $appear: .3s ease 1.5s;
     transition: height $swipe-top-2-time;
     height: 157.5px;
     overflow: hidden;
+    @media screen and (min-width: 1024px) {
+      transition: opacity $swipe-top-2-time;
+      background-size: 100% !important;
+      position: absolute;
+      height: 100%;
+      overflow: hidden;
+      opacity: 1;
+    }
   }
   &.swipe-top-2-enter, &.swipe-top-2-leave-active {
     transition: height $swipe-top-2-time;
     overflow: hidden;
     height: 0px;
+    @media screen and (min-width: 1024px) {
+      transition: opacity $swipe-top-2-time;
+      background-size: 100% !important;
+      position: absolute;
+      height: 100%;
+      overflow: hidden;
+      opacity: 0;
+    }
   }
 }
 

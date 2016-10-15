@@ -4,8 +4,6 @@
 </template>
 
 <script>
-import Trello from 'node-trello'
-const t = new Trello("47ba9fe4f814b2a8ebaaa862a6c86a74")
 
 export default {
   props: {
@@ -28,8 +26,7 @@ export default {
 
   created: function() {
     this.$nextTick( () => {
-      t.get(`/1/cards/${this.film.card}/attachments`, (err, data) => {
-        if (err) throw err;
+      Trello.get(`/cards/${this.film.card}/attachments`, (data) => {
         this.img = data[1].url
       });
     })
