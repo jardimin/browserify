@@ -2,7 +2,7 @@
   <div class="home">
     <div v-if="loaded" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <transition name="swipe-top-2">
-        <carousel v-show="ready" :films="films" :ready="ready" :device="device" ref="carousel" v-on:slide="changeVideo" v-on:right="right" v-on:left="left"></carousel>
+        <div v-show="ready" :films="films" :ready="ready" :device="device" :is="device ? 'carousel' : 'carouseldesk'" ref="carousel" v-on:slide="changeVideo" v-on:right="right" v-on:left="left"></div>
       </transition>
       <transition name="swipe-top">
         <header v-show="ready" class="mdl-layout__header">
@@ -36,6 +36,7 @@
 import _ from 'underscore'
 
 import Carousel from '../components/home-carousel.vue'
+import Carouseldesk from '../components/home-carousel-desk.vue'
 import Descricao from '../components/home-body-desc.vue'
 import Ficha from '../components/home-body-ficha.vue'
 import Info from '../components/home-body-info.vue'
@@ -43,6 +44,7 @@ import Info from '../components/home-body-info.vue'
 export default {
   props: {
     loaded: Boolean,
+    connected: Boolean,
     hipervideos: Array,
     device: Boolean
   },
@@ -83,7 +85,7 @@ export default {
       this.$emit('open-drawer')
     },
     changeVideo () {
-      this.id = this.$refs.carousel.carousel[this.device ? 2 : 0].card
+      this.id = this.device ? this.$refs.carousel.carousel[2].card : this.films[this.$refs.carousel.index].card
       this.atual = _.findWhere(this.films, {card: this.id})
       this.$router.push(`/home/${this.id}/${this.body}`)
     },
@@ -120,6 +122,7 @@ export default {
 
   components: {
     Carousel,
+    Carouseldesk,
     Descricao,
     Info,
     Ficha

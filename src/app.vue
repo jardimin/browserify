@@ -8,14 +8,14 @@
     </transition>
 
      <transition name="fade">
-      <drawer :drawer="drawer" :view="view" v-on:open-drawer="openDrawer"></drawer>
+      <drawer :drawer="drawer" :connected="connected" :view="view" v-on:open-drawer="openDrawer"></drawer>
     </transition>
 
     <transition name="fade">
       <router-view v-if="loaded" :hipervideos="hipervideos" :loaded="loaded" :device="device" class="view" v-on:open-drawer="openDrawer"></router-view>
     </transition>
 
-    <user :board="board" v-on:connected="connect"></user>
+    <user :board="board" :trelloId="trelloId" v-on:connected="connect" ref="user"></user>
     
   </div>
 </template>
@@ -38,6 +38,8 @@ export default {
   data () {
     return {
       board: 'O62BDMJt',
+      trelloId: '47ba9fe4f814b2a8ebaaa862a6c86a74',
+      userToken: null,
       hipervideos: [],
       view: '',
       connected: false,

@@ -5,10 +5,12 @@
 </template>
 
 <script>
+import md5 from 'blueimp-md5'
 
 export default {
   props: {
-    board: String
+    board: String,
+    trelloId: String
   },
 
   data () {
@@ -22,6 +24,18 @@ export default {
 
   created: function() {
     this.$nextTick( () => {
+      
+    })
+  },
+
+  updated: function() {
+    this.$nextTick(function () {
+      componentHandler.upgradeDom()
+    })
+  },
+
+  methods: {
+    connect () {
       let opt = {
         type: "popup",
         name: "hipevideo",
@@ -55,17 +69,7 @@ export default {
         }
       }
       Trello.authorize(opt)
-    })
-  },
-
-  updated: function() {
-    this.$nextTick(function () {
-      componentHandler.upgradeDom()
-    })
-  },
-
-  methods: {
-    
+    }
   },
 
   components: {
