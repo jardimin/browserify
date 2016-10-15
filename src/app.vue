@@ -1,0 +1,125 @@
+<template>
+  <div id="app">
+
+    <transition name="fade">
+      <div v-if="!loaded" class="loader">
+        <div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>
+      </div>
+    </transition>
+
+     <transition name="fade">
+      <drawer :drawer="drawer" :view="view" v-on:open-drawer="openDrawer"></drawer>
+    </transition>
+
+    <transition name="fade">
+      <router-view v-if="loaded" :hipervideos="hipervideos" :loaded="loaded" class="view" v-on:open-drawer="openDrawer"></router-view>
+    </transition>
+    
+  </div>
+</template>
+
+<script>
+import Trello from 'node-trello'
+const t = new Trello("47ba9fe4f814b2a8ebaaa862a6c86a74");
+import Drawer from './components/drawer.vue'
+
+export default {
+  watch: {
+    '$route' (to, from) {
+      const toDepth = to.path.split('/')[1]
+      const fromDepth = from.path.split('/')[1]
+      if (toDepth !== fromDepth) {
+        this.view = toDepth
+      }
+    }
+  },
+
+  data () {
+    return {
+      board: 'O62BDMJt',
+      hipervideos: [],
+      view: '',
+      loaded: false,
+      drawer: false
+    }
+  },
+
+  methods: {
+    openDrawer () {
+      this.drawer = !this.drawer
+    }
+  },
+
+  created: function() {
+    this.$nextTick( () => {
+
+      this.view = this.$route.path.split('/')[1]
+      t.get(`/1/boards/${this.board}/lists`, (err, data) => {
+        if (err) throw err
+        for (var i = 0; i < data.length; i++) {
+          this.hipervideos.push(data[i].id)
+        }
+        componentHandler.upgradeDom()
+        this.loaded = true
+      });
+      
+    })
+  },
+
+  updated: function() {
+    this.$nextTick(function () {
+      componentHandler.upgradeDom()
+    })
+  },
+
+  components: {
+    Drawer
+  }
+
+}
+</script>
+
+<style lang="scss">
+$time: .5s;
+
+p {
+  font-size: 16px;
+}
+
+.loader {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  padding-top: 20%;
+  padding-left: 49%;
+  background: white;
+  @media screen and (max-width: 1024px) {
+    padding-top: 63% !important;
+    padding-left: 45% !important;
+  }
+}
+.fade-enter-active, .fade-leave {
+  transition: opacity $time;
+  opacity: 1;
+}
+.fade-leave-active, .fade-enter {
+  transition: opacity $time;
+  opacity: 0;
+}
+
+.slide-enter-active, .slide-leave {
+  transition: transform $time, opacity $time;
+  transform: translateX(0);
+  opacity: 1;
+}
+.slide-enter {
+  transition: transform $time, opacity $time;
+  transform: translateX(-20px);
+  opacity: 0;
+}
+.slide-leave-active {
+  @extend .slide-enter;
+  transform: translateX(20px);
+}
+
+</style>
