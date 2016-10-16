@@ -5,13 +5,12 @@
         <div v-show="ready" :films="films" :ready="ready" :device="device" :is="device ? 'carousel' : 'carouseldesk'" ref="carousel" v-on:slide="changeVideo" v-on:right="right" v-on:left="left"></div>
       </transition>
       <transition name="swipe-top">
-        <header v-show="ready" class="mdl-layout__header">
+        <header id="header" v-show="ready" class="mdl-layout__header">
           <div aria-expanded="false" role="button" tabindex="0" class="mdl-layout__drawer-button" @click="openDrawer"><i class="material-icons">menu</i></div>
           <!-- Tabs -->
           <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
             <router-link :to="'/home/'+id+'/descricao'" class="mdl-layout__tab" active-class="is-active">Descrição</router-link>
-            <router-link :to="'/home/'+id+'/info'" class="mdl-layout__tab" active-class="is-active">Info</router-link>
-            <router-link :to="'/home/'+id+'/ficha'" class="mdl-layout__tab" active-class="is-active">Ficha</router-link>
+            <router-link :to="'/home/'+id+'/info'" class="mdl-layout__tab" active-class="is-active">Detalhes</router-link>
           </div>
         </header>
       </transition>
@@ -21,7 +20,7 @@
             <div class="mdl-grid">
               <div class="mdl-cell mdl-cell--12-col">
                 <transition name="body-fade" mode="out-in" appear appear-class="appear" appear-active-class="appear-active">
-                  <div :is="body" v-if="atual" :films="films" :atual="atual" :id="id" :direcao="direcao"></div>
+                  <div :is="body" v-if="atual" :films="films" :atual="atual" :id="id" :direcao="direcao" :device="device"></div>
                 </transition>
               </div>
             </div>
@@ -38,7 +37,6 @@ import _ from 'underscore'
 import Carousel from '../components/home-carousel.vue'
 import Carouseldesk from '../components/home-carousel-desk.vue'
 import Descricao from '../components/home-body-desc.vue'
-import Ficha from '../components/home-body-ficha.vue'
 import Info from '../components/home-body-info.vue'
 
 export default {
@@ -69,7 +67,6 @@ export default {
       }
     },
     films: function (val, oldVal) {
-      console.log(val.length)
       if (val.length === this.hipervideos.length && val.length === oldVal.length) {
         this.ready = true
         console.log('ready')
@@ -124,20 +121,19 @@ export default {
     Carousel,
     Carouseldesk,
     Descricao,
-    Info,
-    Ficha
+    Info
   }
 }
 </script>
 
 <style lang="scss">
-header {
+header#header {
   position: relative;
   @media screen and (min-width: 1024px) {
     position: absolute;
     top: 40%;
     padding-left: 3% !important;
-    width: 48% !important;
+    width: 48%;
   }
 }
 .mdl-layout__tab-bar-container {

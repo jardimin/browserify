@@ -20,14 +20,17 @@ const routes = [
         },
         {
           path: 'info'
-        },
-        {
-          path: 'ficha'
         }]
       }
     ]
   },
-  { path: '/hipervideo', component: Hipervideo }
+  { path: '/hipervideo', component: Hipervideo,
+    children: [
+      {
+        path: ':id'
+      }
+    ]
+  }
 ]
 
 const router = new VueRouter({

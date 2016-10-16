@@ -11,7 +11,7 @@
       <drawer :drawer="drawer" :connected="connected" :view="view" v-on:open-drawer="openDrawer"></drawer>
     </transition>
 
-    <transition name="fade">
+    <transition :name="view === 'home' ? 'fade' : 'hiper'" mode="out-in">
       <router-view v-if="loaded" :hipervideos="hipervideos" :loaded="loaded" :device="device" class="view" v-on:open-drawer="openDrawer"></router-view>
     </transition>
 
@@ -60,11 +60,9 @@ export default {
 
   created: function() {
     this.$nextTick( () => {
-      if (navigator.userAgent.match(/Tablet|iPad/i))
-      {
-          this.device = true
-      } else if(navigator.userAgent.match(/IEMobile|Windows Phone|Lumia|Android|webOS|iPhone|iPod|Blackberry|PlayBook|BB10|Mobile Safari|Opera Mini|\bCrMo\/|Opera Mobi/i) )
-      {
+      if (navigator.userAgent.match(/Tablet|iPad/i)) {
+        this.device = true
+      } else if(navigator.userAgent.match(/IEMobile|Windows Phone|Lumia|Android|webOS|iPhone|iPod|Blackberry|PlayBook|BB10|Mobile Safari|Opera Mini|\bCrMo\/|Opera Mobi/i) ) {
           this.device = true
       } else {
           this.device = false
@@ -122,6 +120,61 @@ p {
 .fade-leave-active, .fade-enter {
   transition: opacity $time;
   opacity: 0;
+}
+
+.hiper-enter-active, .hiper-leave {
+  transition: opacity 1s;
+  opacity: 1;
+  #carousel-home {
+    transition: height $time ease .4s;
+    @media screen and (min-width: 1024px) {
+      transition: opacity $time !important;
+      opacity: 1 !important;
+    }
+  }
+  header#header {
+    transition: width .3s, margin-left .2s ease .3s;
+    width: 100%;
+    margin-left: 0;
+    @media screen and (min-width: 1024px) {
+      transition: width .5s, left .3s ease .6s !important;
+      width: 48% !important;
+      margin-left: 0 !important;
+      left: 0 !important;
+    }
+  }
+  main {
+    transition: opacity .2s;
+    opacity: 1;
+  }
+}
+.hiper-leave-active, .hiper-enter {
+  transition: opacity 1s;
+  opacity: 1;
+  #carousel-home {
+    transition: height $time ease .4s;
+    height: 0;
+    @media screen and (min-width: 1024px) {
+      transition: opacity $time;
+      opacity: 0;
+      height: 100%;
+    }
+  }
+  header#header {
+    transition: width .3s, margin-left .2s ease .3s;
+    width: 59px;
+    margin-left: -60px;
+    @media screen and (min-width: 1024px) {
+      transition: width .5s, left .3s ease .6s;
+      width: 75px;
+      left: -75px;
+      margin-left: 0px;
+    }
+  }
+  main {
+    transition: opacity .2s;
+    opacity: 0;
+  }
 }
 
 .slide-enter-active, .slide-leave {
