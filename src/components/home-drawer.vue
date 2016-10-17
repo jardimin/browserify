@@ -1,6 +1,6 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
+  <div class="drawer-home">
+    <h3>BEM VINDO!</h3>
   </div>
 </template>
 
@@ -8,8 +8,17 @@
 export default {
   data () {
     return {
-      msg: 'Hello Bitch!'
+      
     }
   }
 }
 </script>
+<style lang="scss">
+.drawer-home {
+  h3 {
+    text-align: center;
+    font-weight: 900;
+    margin-top: 0;
+  }
+}
+</style>

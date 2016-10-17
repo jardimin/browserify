@@ -24,13 +24,8 @@ const routes = [
       }
     ]
   },
-  { path: '/hipervideo', component: Hipervideo,
-    children: [
-      {
-        path: ':id'
-      }
-    ]
-  }
+  { path: '/hipervideo/:id', component: Hipervideo },
+  { path: '*', redirect: '/home' }
 ]
 
 const router = new VueRouter({

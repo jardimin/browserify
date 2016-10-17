@@ -105,6 +105,7 @@ export default {
             film[k] = props[k];
           }
           film['card'] = headers.id
+          film['hip'] = this.hipervideos[i]
           this.films.push(film)
         });
       }

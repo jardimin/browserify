@@ -36,7 +36,7 @@ export default {
 
   methods: {
     playTouch () {
-      this.$router.push(`/hipervideo/${this.film.card}`)
+      this.$router.push(`/hipervideo/${this.film.hip}`)
     }
   },
 

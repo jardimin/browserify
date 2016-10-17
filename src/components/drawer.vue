@@ -2,14 +2,33 @@
   <div id="drawer">
     <div class="mdl-layout__drawer" :class="{'is-visible': drawer}">
       <div class="mdl-grid" style="padding: 0;">
-        <div class="mdl-cell mdl-cell--12-col" style="margin: 0;">
+
+        <div class="mdl-cell mdl-cell--12-col" >
+          <span @click="auth" class="mdl-chip mdl-chip--contact">
+            <transition>
+              <span v-if="!connected" class="mdl-chip__contact mdl-color--deep-purple mdl-color-text--white">
+                <transition>
+                  <i v-if="!connecting" class="fa fa-trello" aria-hidden="true"></i>
+                  <i v-else class="fa fa-cog fa-spin" aria-hidden="true"></i>
+                </transition>
+              </span>
+              <img v-else :src="user.img" class="mdl-chip__contact">
+            </transition>
+            
+            <transition name="fade">
+              <span v-if="!connected && !connecting" class="mdl-chip__text">Conecte-se</span>
+              <span v-if="!connected && connecting" class="mdl-chip__text">Conectando...</span>
+              <span v-if="connected && !connecting" class="mdl-chip__text">{{user.nome[0].toUpperCase() + user.nome.slice(1)}}</span>
+            </transition>
+          </span>
+        </div>
+
+        <div class="mdl-cell mdl-cell--12-col">
           
             <componet :is="view"></componet>
 
         </div>
-        <div class="mdl-cell mdl-cell--12-col" style="margin: 0;">
-
-        </div>
+        
       </div>
     </div>
     <div class="mdl-layout__obfuscator" :class="{'is-visible': drawer}" @click="openDrawer"></div>
@@ -24,18 +43,28 @@ import Hipervideo from './hipervideo-drawer.vue'
 export default {
   props: {
     drawer: Boolean,
+    connected: Boolean,
     view: String
   },
 
   data () {
     return {
-      
+      user: null,
+      connecting: false
+    }
+  },
+
+  watch: {
+    connected: function (val, oldVal) {
+      if (val) {
+        this.connecting = false
+      }
     }
   },
 
   created: function() {
     this.$nextTick( () => {
-      
+      this.user = this.$root.$children[0].$refs.user._data
     })
   },
 
@@ -48,6 +77,20 @@ export default {
   methods: {
     openDrawer () {
       this.$emit('open-drawer')
+    },
+    connectTrello () {
+      this.connecting = true
+      this.$root.$children[0].$refs.user.connect()
+    },
+    disconnect () {
+      this.$emit('trello-disconnect')
+    },
+    auth () {
+      if (this.connected) {
+        this.disconnect()
+      } else {
+        this.connectTrello()
+      }
     }
   },
 
@@ -97,6 +140,26 @@ $time: .5s;
 .slide-leave-active {
   @extend .slide-enter;
   transform: translateX(20px);
+}
+
+#drawer {
+  .mdl-chip {
+    height: 45px;
+    width: 95%;
+    border-radius: 28px;
+    cursor: pointer;
+  }
+  .mdl-chip__contact {
+    height: 45px;
+    width: 45px;
+    border-radius: 35px;
+    .fa {
+      margin-top: 13px;
+    }
+  }
+  .mdl-chip__text {
+    font-size: 18px;
+  }
 }
 
 </style>

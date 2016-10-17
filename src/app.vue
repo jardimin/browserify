@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" allowfullscreen="true">
 
     <transition name="fade">
       <div v-if="!loaded" class="loader">
@@ -8,14 +8,14 @@
     </transition>
 
      <transition name="fade">
-      <drawer :drawer="drawer" :connected="connected" :view="view" v-on:open-drawer="openDrawer"></drawer>
+      <drawer :drawer="drawer" :connected="connected" :view="view" v-on:open-drawer="openDrawer" v-on:trello-disconnect="disconect"></drawer>
     </transition>
 
     <transition :name="view === 'home' ? 'fade' : 'hiper'" mode="out-in">
       <router-view v-if="loaded" :hipervideos="hipervideos" :loaded="loaded" :device="device" class="view" v-on:open-drawer="openDrawer"></router-view>
     </transition>
 
-    <user :board="board" :trelloId="trelloId" v-on:connected="connect" ref="user"></user>
+    <user :board="board" :trelloId="trelloId" :connected="connected" v-on:connected="connect" ref="user"></user>
     
   </div>
 </template>
@@ -45,7 +45,18 @@ export default {
       connected: false,
       loaded: false,
       drawer: false,
-      device: false
+      device: false,
+      qualidade: 0,
+      acessibilidade: 'normal'
+    }
+  },
+
+  watch : {
+    qualidade: function (val, oldVal) {
+      document.cookie = "qualidade=" + val;
+    },
+    acessibilidade: function (val, oldVal) {
+      document.cookie = "acessibilidade=" + val;
     }
   },
 
@@ -55,6 +66,69 @@ export default {
     },
     connect () {
       this.connected = true
+    },
+    disconect () {
+      this.connected = false
+    },
+    getCookie (cname) {
+      var name = cname + "=";
+      var ca = document.cookie.split(';')
+      for(var i=0; i<ca.length; i++) {
+        var c = ca[i]
+        while (c.charAt(0)==' ') c = c.substring(1)
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length)
+      }
+      return ""
+    },
+    cookieQualidade () {
+      switch(this.getCookie('qualidade')) {
+        case '':
+          document.cookie = "qualidade=0"
+          break
+        case '2':
+          this.qualidade = 2
+          break
+        case '1':
+          this.qualidade = 1
+          break
+        case '0':
+          this.qualidade = 0
+          break
+      }
+    },
+    cookieAcess () {
+      switch(this.getCookie('acessibilidade')) {
+        case '':
+          document.cookie = "acessibilidade=normal"
+          break
+        case 'libras':
+          this.acessibilidade = 'libras'
+          break
+        case 'audio':
+          this.acessibilidade = 'audio'
+          break
+        case 'normal':
+          this.acessibilidade = 'normal'
+          break
+      }
+    },
+    cookieUser () {
+      switch(this.getCookie('user')) {
+        case '':
+          document.cookie = "user=false"
+          break
+        case 'true':
+          this.$refs.user.connect()
+      }
+    },
+    cookieVolume () {
+      var cook = this.getCookie('volume')
+      if (cook === '') {
+        document.cookie = "volume=50"
+        return 50
+      } else {
+        return parseInt(cook)
+      }
     }
   },
 
@@ -77,6 +151,18 @@ export default {
         this.loaded = true
       });
       
+    })
+  },
+
+  mounted: function () {
+    this.$nextTick( () => {
+
+      this.cookieQualidade()
+
+      this.cookieAcess()
+
+      this.cookieUser()
+
     })
   },
 

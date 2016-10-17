@@ -10,6 +10,7 @@ import md5 from 'blueimp-md5'
 export default {
   props: {
     board: String,
+    connected: Boolean,
     trelloId: String
   },
 
@@ -19,6 +20,18 @@ export default {
       nome: '',
       email: '',
       img: ''
+    }
+  },
+
+  watch: {
+    connected: function (val, oldVal) {
+      if (val === false) {
+        this.user_board = ''
+        this.nome = ''
+        this.email = ''
+        this.img = ''
+        document.cookie = "user=false"
+      }
     }
   },
 

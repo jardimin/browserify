@@ -6,7 +6,7 @@
     <div class="arrow-right" @click="slideRight">
       <i class="material-icons">chevron_right</i>
     </div>
-    <div :style="{ marginLeft: margin_default + touch_slide + 'px'}" :class="{active: touch}" class="film-wrap" @touchstart.passive="touchStart" @touchend.passive="touchEnd" @touchmove.passive="touchMove" >
+    <div :style="{ marginLeft: margin_default + touch_slide + 'px'}" :class="{active: touch}" class="film-wrap" @touchstart="touchStart" @touchend="touchEnd" @touchmove="touchMove" >
       <transition-group name="swipe-left">
         <film v-for="film in carousel" :film="film" :device="device" :key="film.id" ></film>
       </transition-group>
