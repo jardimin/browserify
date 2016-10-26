@@ -10,6 +10,22 @@
       </div>
 
     </div>
+    <header id="header" v-show="video_load" class="mdl-layout__header" style="display: block;">
+      <div aria-expanded="false" role="button" tabindex="0" class="mdl-layout__drawer-button" @click="openDrawer"><i class="material-icons">menu</i></div>
+    </header>
+    <main v-if="headers" class="mdl-layout__content">
+      <div class="page-content">
+        <div class="mdl-grid">
+          <div class="mdl-cell mdl-cell--12-col">
+            <div>{{headers.descricao}}</div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div id="info" :style="{bottom: bottom_default + touch_slide + info_offset +'px'}" :class="[{touch: touch},{open: info_open}]">
+      <div class="handle" @touchstart.prevent="touchStart" @touchend.prevent="touchEnd" @touchmove.prevent="touchMove"><i class="material-icons">keyboard_arrow_up</i></div>
+      <div class="body"></div>
+    </div>
     <transition name="fade">
       <div id="buffer" v-if="!video_load">
         <i class="fa fa-refresh fa-spin refresher" aria-hidden="true"></i>
@@ -37,7 +53,13 @@ export default {
       eventos: null,
       cartelas: null,
       video_load: false,
-      playing: false
+      playing: false,
+      touch: false,
+      touch_point: 0,
+      touch_slide: 0,
+      bottom_default: -480,
+      info_open: false,
+      info_offset: 0
     }
   },
 
@@ -71,6 +93,29 @@ export default {
         elements.push(el)
       }
       return elements
+    },
+    openDrawer () {
+      this.$parent.$parent.drawer = true
+      console.log(this.$parent.drawer)
+    },
+    touchStart (e) {
+      this.touch = true
+      this.touch_point = e.changedTouches[0].clientY
+    },
+    touchMove (e) {
+      this.touch_slide = -(e.changedTouches[0].clientY - this.touch_point)
+    },
+    touchEnd (e) {
+      this.touch = false
+      if ( this.touch_slide > 100 ) {
+        this.info_open = true
+        this.info_offset = 480
+      } else if ( this.touch_slide < -100 ) {
+        this.info_open = false
+        this.info_offset = 0
+      }
+      this.touch_point = 0
+      this.touch_slide = 0
     }
   },
 
@@ -212,7 +257,7 @@ export default {
   height: 100%;
   width: 100%;
   top: 0;
-  z-index: 1;
+  z-index: 5;
   left: 0;
   opacity: 1;
   &.fade-enter-active, &.fade-leave {
@@ -282,6 +327,35 @@ export default {
     transition: opacity .1s, transform .1s;
     transform: scale(2);
     opacity: 0;
+  }
+}
+#info {
+  transition: bottom .2s;
+  position: fixed;
+  bottom: -480px;
+  width: 100%;
+  height: 100%;
+  background: white;
+  z-index: 3;
+  &.touch {
+    transition: none;
+  }
+  &.open {
+    .material-icons {
+      transform: rotate(180deg);
+    }
+  }
+  .handle {
+    height: 32px;
+    width: 100%;
+    box-shadow: 0 6px 10px 0 rgba(0,0,0,.14),0 1px 18px 0 rgba(0,0,0,.12),0 -3px 5px -1px rgba(0,0,0,.2);
+    background: #D1C4E9;
+    .material-icons {
+      transition: transform .3s;
+      margin-left: 45%;
+      font-size: 40px;
+      margin-top: -3px;
+    }
   }
 }
 </style>

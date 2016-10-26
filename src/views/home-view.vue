@@ -156,8 +156,10 @@ header#header {
     }
   }
 }
-.page-content {
-  height: 50px;
+.home {
+  .page-content {
+    height: 50px;
+  }
 }
 @media screen and (min-width: 1024px) {
   main {
