@@ -12,6 +12,17 @@
     </div>
     <header id="header" v-show="video_load" class="mdl-layout__header" style="display: block;">
       <div aria-expanded="false" role="button" tabindex="0" class="mdl-layout__drawer-button" @click="openDrawer"><i class="material-icons">menu</i></div>
+      <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--1-col">
+          <div class="event_left"><i class="material-icons">keyboard_arrow_left</i></div>
+        </div>
+        <div class="mdl-cell mdl-cell--2-col">
+          <div class="event_up">Teste</div>
+        </div>
+        <div class="mdl-cell mdl-cell--1-col">
+          <div class="event_right"><i class="material-icons">keyboard_arrow_right</i></div>
+        </div>
+      </div>
     </header>
     <main v-if="headers" class="mdl-layout__content">
       <div class="page-content">
@@ -161,95 +172,39 @@ export default {
   overflow: hidden;
   position: relative;
 }
-#status {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  background: rgba(0,0,0,.3);
-  z-index: 0;
-  opacity: 1;
-  transition: opacity .5s;
-  &.hide {
-    opacity: 0;
-  }
-  .play_pause {
-    color: white;
-    font-size: 65px;
-    top: 33%;
-    position: absolute;
-    left: 40%;
-    opacity: .5;
-  }
-  .play {
-    @extend .play_pause;
-    opacity: 1;
-  }
-  .pause {
-    @extend .play_pause;
-  }
-  .loader {
-    @extend .play_pause;
-    left: 43%;
-    font-size: 55px;
-  }
-}
 #video_player {
   width: 100%;
 }
 #screen {
   position: absolute;
 }
-#video_controls {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-}
-#timeline {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  &.seeking {
-    #back {
-      border-bottom: 6px solid black;
-      height: 98%;
-      background: rgba(0, 0, 0, 0.1);
-    }
-    #fill {
-      border-bottom: 6px solid red;
-      height: 98%;
-      background: rgba(0, 0, 0, 0.1);
-    }
-    #handle {
-      transform: scale(1);
+.mdl-layout__header {
+  .mdl-layout__drawer-button {
+    @media screen and (max-width: 1024px) {
+      margin: 4px;
+      position: fixed;
+      border-radius: 50%;
+      transform: scale(.8);
     }
   }
 }
-#back {
-  transition: border-bottom .3s, height .3s, background .3s;
-  position: absolute;
-  width: 100%;
-  border-bottom: 3px solid black;
-  height: 99%;
-  background: rgba(0, 0, 0, 0);
-}
-#fill {
-  transition: border-bottom .3s, height .3s, background .3s;
-  position: absolute;
-  background: rgba(0, 0, 0, 0);
-  border-bottom: 3px solid red;
-  height: 99%;}
-#handle {
-  transition: transform .3s;
-  transform: scale(0);
-  position: fixed;
-  left: 49%;
-  color: transparent;
-  font-size: 25px;
-  top: 37.5%;
-  background: red;
-  height: 15px;
-  width: 15px;
-  border-radius: 50%;
+#header {
+  min-height: 56px;
+  height: 56px;
+  .mdl-cell--1-col {
+    @media (max-width: 479px) {
+      width: calc(10% - 16px);
+    }
+  }
+  .mdl-cell--2-col {
+    @media (max-width: 479px) {
+      width: calc(80% - 16px);
+    }
+  }
+  .event_up {
+    text-align: center;
+    font-size: 20px;
+  }
 }
 #buffer {
   position: fixed;
