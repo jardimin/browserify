@@ -1,14 +1,14 @@
 0 info it worked if it ends with ok
 1 verbose cli [ '/usr/bin/nodejs', '/usr/bin/npm', 'run', 'dev' ]
 2 info using npm@3.10.8
-3 info using node@v6.8.1
+3 info using node@v6.9.0
 4 verbose run-script [ 'predev', 'dev', 'postdev' ]
 5 info lifecycle vue-basic@~predev: vue-basic@
 6 silly lifecycle vue-basic@~predev: no script for predev, continuing
 7 info lifecycle vue-basic@~dev: vue-basic@
 8 verbose lifecycle vue-basic@~dev: unsafe-perm in lifecycle true
-9 verbose lifecycle vue-basic@~dev: PATH: /usr/lib/node_modules/npm/bin/node-gyp-bin:/media/bambuzal/Softwares/hv-template/node_modules/.bin:/home/papoula/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/home/papoula/.rvm/bin:/home/papoula/.rvm/bin
-10 verbose lifecycle vue-basic@~dev: CWD: /media/bambuzal/Softwares/hv-template
+9 verbose lifecycle vue-basic@~dev: PATH: /usr/lib/node_modules/npm/bin/node-gyp-bin:/home/jardim/Documentos/hipervideo-template/node_modules/.bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/home/jardim/.rvm/bin:/home/jardim/.rvm/bin
+10 verbose lifecycle vue-basic@~dev: CWD: /home/jardim/Documentos/hipervideo-template
 11 silly lifecycle vue-basic@~dev: Args: [ '-c', 'npm-run-all --parallel watchify serve' ]
 12 silly lifecycle vue-basic@~dev: Returned: code: 1  signal: null
 13 info lifecycle vue-basic@~dev: Failed to exec dev script
@@ -23,10 +23,10 @@
 14 verbose stack     at maybeClose (internal/child_process.js:877:16)
 14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:226:5)
 15 verbose pkgid vue-basic@
-16 verbose cwd /media/bambuzal/Softwares/hv-template
+16 verbose cwd /home/jardim/Documentos/hipervideo-template
 17 error Linux 3.16.0-4-amd64
 18 error argv "/usr/bin/nodejs" "/usr/bin/npm" "run" "dev"
-19 error node v6.8.1
+19 error node v6.9.0
 20 error npm  v3.10.8
 21 error code ELIFECYCLE
 22 error vue-basic@ dev: `npm-run-all --parallel watchify serve`
