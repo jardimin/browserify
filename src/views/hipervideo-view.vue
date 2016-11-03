@@ -1,21 +1,40 @@
 <template>
   <div class="hip_wrap">
-    <div :is="device ? 'mobile' : 'desktop' " :loaded="loaded" :connected="connected" :hipervideos="hipervideos" :device="device"></div>
+    <div :is="device ? 'mobile' : 'desktop' " :loaded="loaded" :connected="user.connected" :hipervideos="hipervideos" :device="device" ref="hv"></div>
   </div>
 </template>
 
 <script>
-import _ from 'underscore'
 
 import Desktop from './hipervideo-view-desktop.vue'
 import Mobile from './hipervideo-view-mobile.vue'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  props: {
-    loaded: Boolean,
-    connected: Boolean,
-    hipervideos: Array,
-    device: Boolean
+  computed: mapGetters([
+    'user',
+    'loaded',
+    'hipervideos',
+    'device'
+  ]),
+
+  methods: mapActions([
+    'getHeaders',
+    'getEventos',
+    'getCartelas',
+    'getPlugins',
+  ]),
+
+  created: function () {
+    this.$nextTick( () => {
+      Trello.get(`/lists/${this.$route.params.id}/cards`, (data) => {
+        let head = data.find(p => p.name === "headers")
+        this.getHeaders(head.desc)
+        this.getEventos(data)
+        this.getCartelas(data)
+        this.getPlugins(data)
+      })
+    })
   },
 
   components: {

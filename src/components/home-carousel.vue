@@ -8,7 +8,7 @@
     </div>
     <div :style="{ marginLeft: margin_default + touch_slide + 'px'}" :class="{active: touch}" class="film-wrap" @touchstart="touchStart" @touchend="touchEnd" @touchmove="touchMove" >
       <transition-group name="swipe-left">
-        <film v-for="film in carousel" :film="film" :device="device" :key="film.id" ></film>
+        <film v-for="film in carousel" :film="film" :key="film.id" ></film>
       </transition-group>
     </div>
   </div>
@@ -22,8 +22,7 @@ import Film from '../components/home-carousel-film.vue'
 export default {
   props: {
     films: Array,
-    ready: Boolean,
-    device: Boolean
+    ready: Boolean
   },
 
   data () {
@@ -65,7 +64,7 @@ export default {
         this.carousel.unshift(temp)
         this.$emit('right')
         this.$emit('slide')
-      },this.device ? 1 : 500)
+      },1)
     },
     touchStart (e) {
       this.touch = true

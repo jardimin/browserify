@@ -8,21 +8,19 @@
     </transition>
 
      <transition name="fade">
-      <drawer :drawer="drawer" :connected="connected" :view="view" v-on:open-drawer="openDrawer" v-on:trello-disconnect="disconect"></drawer>
+      <drawer :view="view"></drawer>
     </transition>
 
     <transition :name="view === 'home' ? 'fade' : 'hiper'" mode="out-in">
-      <router-view v-if="loaded" :hipervideos="hipervideos" :loaded="loaded" :device="device" class="view" v-on:open-drawer="openDrawer"></router-view>
+      <router-view v-if="loaded" class="view" ref="view"></router-view>
     </transition>
-
-    <user :board="board" :trelloId="trelloId" :connected="connected" v-on:connected="connect" ref="user"></user>
     
   </div>
 </template>
 
 <script>
 import Drawer from './components/drawer.vue'
-import User from './components/user.vue'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   watch: {
@@ -31,137 +29,90 @@ export default {
       const fromDepth = from.path.split('/')[1]
       if (toDepth !== fromDepth) {
         this.view = toDepth
+        if (fromDepth === 'hipervideo') {
+          this.resetHiper()
+        }
       }
     }
   },
 
   data () {
     return {
-      board: 'O62BDMJt',
-      trelloId: '47ba9fe4f814b2a8ebaaa862a6c86a74',
-      userToken: null,
-      hipervideos: [],
-      view: '',
-      connected: false,
-      loaded: false,
-      drawer: false,
-      device: false,
-      qualidade: 0,
-      acessibilidade: 'normal'
+      view: ''
     }
   },
 
-  watch : {
-    qualidade: function (val, oldVal) {
-      document.cookie = "qualidade=" + val;
-    },
-    acessibilidade: function (val, oldVal) {
-      document.cookie = "acessibilidade=" + val;
+  computed: mapGetters([
+    'user',
+    'loaded'
+  ]),
+
+  methods: mapActions([
+    'connectUser',
+    'isDevice',
+    'getHipervideos',
+    'openDrawer',
+    'changeQual',
+    'changeAcess',
+    'resetHiper'
+  ]),
+  getCookie (cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';')
+    for(var i=0; i<ca.length; i++) {
+      var c = ca[i]
+      while (c.charAt(0)==' ') c = c.substring(1)
+      if (c.indexOf(name) == 0) return c.substring(name.length,c.length)
+    }
+    return ""
+  },
+  cookieQualidade () {
+    switch(this.getCookie('qualidade')) {
+      case '':
+        document.cookie = "qualidade=0"
+        break
+      case '2':
+        this.changeQual(2)
+        break
+      case '1':
+        this.changeQual(1)
+        break
+      case '0':
+        this.changeQual(0)
+        break
     }
   },
-
-  methods: {
-    openDrawer () {
-      this.drawer = !this.drawer
-    },
-    connect () {
-      this.connected = true
-    },
-    disconect () {
-      this.connected = false
-    },
-    getCookie (cname) {
-      var name = cname + "=";
-      var ca = document.cookie.split(';')
-      for(var i=0; i<ca.length; i++) {
-        var c = ca[i]
-        while (c.charAt(0)==' ') c = c.substring(1)
-        if (c.indexOf(name) == 0) return c.substring(name.length,c.length)
-      }
-      return ""
-    },
-    cookieQualidade () {
-      switch(this.getCookie('qualidade')) {
-        case '':
-          document.cookie = "qualidade=0"
-          break
-        case '2':
-          this.qualidade = 2
-          break
-        case '1':
-          this.qualidade = 1
-          break
-        case '0':
-          this.qualidade = 0
-          break
-      }
-    },
-    cookieAcess () {
-      switch(this.getCookie('acessibilidade')) {
-        case '':
-          document.cookie = "acessibilidade=normal"
-          break
-        case 'libras':
-          this.acessibilidade = 'libras'
-          break
-        case 'audio':
-          this.acessibilidade = 'audio'
-          break
-        case 'normal':
-          this.acessibilidade = 'normal'
-          break
-      }
-    },
-    cookieUser () {
-      switch(this.getCookie('user')) {
-        case '':
-          document.cookie = "user=false"
-          break
-        case 'true':
-          this.$refs.user.connect()
-      }
-    },
-    cookieVolume () {
-      var cook = this.getCookie('volume')
-      if (cook === '') {
-        document.cookie = "volume=50"
-        return 50
-      } else {
-        return parseInt(cook)
-      }
+  cookieAcess () {
+    switch(this.getCookie('acessibilidade')) {
+      case '':
+        document.cookie = "acessibilidade=normal"
+        break
+      case 'libras':
+        this.changeAcess('libras')
+        break
+      case 'audio':
+        this.changeAcess('audio')
+        break
+      case 'normal':
+        this.changeAcess('normal')
+        break
     }
   },
 
   created: function() {
     this.$nextTick( () => {
-      if (navigator.userAgent.match(/Tablet|iPad/i)) {
-        this.device = true
-      } else if(navigator.userAgent.match(/IEMobile|Windows Phone|Lumia|Android|webOS|iPhone|iPod|Blackberry|PlayBook|BB10|Mobile Safari|Opera Mini|\bCrMo\/|Opera Mobi/i) ) {
-          this.device = true
-      } else {
-          this.device = false
-      }
-
+      this.isDevice()
       this.view = this.$route.path.split('/')[1]
-      Trello.get(`/boards/${this.board}/lists`, (data) => {
-        for (var i = 0; i < data.length; i++) {
-          this.hipervideos.push(data[i].id)
-        }
-        componentHandler.upgradeDom()
-        this.loaded = true
-      });
-      
+      this.getHipervideos()
     })
   },
 
   mounted: function () {
     this.$nextTick( () => {
 
-      this.cookieQualidade()
+      this.cookieQualidade
 
-      this.cookieAcess()
-
-      this.cookieUser()
+      this.cookieAcess
 
     })
   },
@@ -173,8 +124,7 @@ export default {
   },
 
   components: {
-    Drawer,
-    User
+    Drawer
   }
 
 }

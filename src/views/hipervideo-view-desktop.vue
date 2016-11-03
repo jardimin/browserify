@@ -1,11 +1,11 @@
 <template>
   <div class="hipervideo">
 
-    <div v-if="headers" id="player" @touchstart="touchStart" @touchend="touchEnd" @touchmove="touchMove" ref="player">
+    <div v-if="hv.headers" id="player" @touchstart="touchStart" @touchend="touchEnd" @touchmove="touchMove" ref="player">
 
       <div id="screen">
         <video id="video_player" ref="engine">
-          <source id="mp4" :src="headers.url + '_mobile.m4v'" type="video/mp4">
+          <source id="mp4" :src="hv.headers.url + '_mobile.m4v'" type="video/mp4">
         </video>
       </div>
 
@@ -22,7 +22,7 @@
           <div id="fill" :style="{width: progress + '%'}"></div>
           <div id="handle" :style="{left: progress + '%'}"></div>
         </div>
-        <div v-if="!device" id="ctrl_buttons">
+        <div id="ctrl_buttons">
           <div id="ctrl_left"></div>
           <div id="ctrl_right"></div>
         </div>
@@ -40,21 +40,11 @@
 
 <script>
 import _ from 'underscore'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  props: {
-    loaded: Boolean,
-    connected: Boolean,
-    hipervideos: Array,
-    device: Boolean
-  },
-
   data () {
     return {
-      headers: null,
-      plugins: null,
-      eventos: null,
-      cartelas: null,
       video_load: false,
       playing: false,
       seeking: false,
@@ -67,6 +57,10 @@ export default {
       progress: 0
     }
   },
+
+  computed: mapGetters([
+    'hv'
+  ]),
 
   watch: {
     playing: function (val, oldVal) {
@@ -98,26 +92,6 @@ export default {
   },
 
   methods: {
-    getData (desc) {
-      return JSON.parse(desc)
-    },
-    getElement (data, element) {
-      var c = _.pluck(data, "name")
-      var ind = []
-      var elements = []
-      for (var i = 0; i < c.length; i++) {
-        if (c[i].split("-")[0] === element) {
-          ind.push(i)
-        }
-      }
-      for (var i = 0; i < ind.length; i++) {
-        var el = this.getData(data[ind[i]].desc)
-        el.card = data[ind[i]].id
-        el.id = parseInt(data[ind[i]].name.split("-")[1])
-        elements.push(el)
-      }
-      return elements
-    },
     seek (seek) {
       this.progress = (seek * 100) / window.innerWidth
     },
@@ -159,13 +133,7 @@ export default {
 
   created: function () {
     this.$nextTick( () => {
-      Trello.get(`/lists/${this.$route.params.id}/cards`, (data) => {
-        let head = _.findWhere(data, { "name": "headers" })
-        this.headers = JSON.parse(head.desc)
-        this.plugins = this.getElement(data, 'plugins')
-        this.eventos = this.getElement(data, 'eventos')
-        this.cartelas = this.getElement(data, 'cartelas')
-      })
+      
     })
   },
 

@@ -2,7 +2,7 @@
   <div class="home">
     <div v-if="loaded" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <transition name="swipe-top-2">
-        <div v-show="ready" :films="films" :ready="ready" :device="device" :is="device ? 'carousel' : 'carouseldesk'" ref="carousel" v-on:slide="changeVideo" v-on:right="right" v-on:left="left"></div>
+        <div v-show="ready" :films="films" :ready="ready" :is="device ? 'carousel' : 'carouseldesk'" ref="carousel" v-on:slide="changeVideo" v-on:right="right" v-on:left="left"></div>
       </transition>
       <transition name="swipe-top">
         <header id="header" v-show="ready" class="mdl-layout__header">
@@ -38,14 +38,9 @@ import Carousel from '../components/home-carousel.vue'
 import Carouseldesk from '../components/home-carousel-desk.vue'
 import Descricao from '../components/home-body-desc.vue'
 import Info from '../components/home-body-info.vue'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  props: {
-    loaded: Boolean,
-    connected: Boolean,
-    hipervideos: Array,
-    device: Boolean
-  },
 
   data () {
     return {
@@ -57,6 +52,12 @@ export default {
       atual: null
     }
   },
+
+  computed: mapGetters([
+    'hipervideos',
+    'loaded',
+    'device'
+  ]),
 
   watch: {
     '$route' (to, from) {
@@ -77,9 +78,10 @@ export default {
     }
   },
 
+
   methods: {
     openDrawer () {
-      this.$emit('open-drawer')
+      this.$store.dispatch('openDrawer')
     },
     changeVideo () {
       this.id = this.device ? this.$refs.carousel.carousel[2].card : this.films[this.$refs.carousel.index].card
@@ -93,12 +95,13 @@ export default {
       this.direcao = 'left'
     }
   },
+  
 
   mounted: function() {
     this.$nextTick( () => {
       for (let i in this.hipervideos) {
         Trello.get(`/lists/${this.hipervideos[i]}/cards`, (data) => {
-          let headers = _.findWhere(data, { "name": "headers" })
+          let headers = data.find(p => p.name === 'headers')
           let film = {}
           let props = JSON.parse(headers.desc)
           for (let k of Object.keys(props)) {
@@ -135,6 +138,8 @@ header#header {
     top: 40%;
     padding-left: 3% !important;
     width: 48%;
+    min-height: 64px;
+    height: 64px;
   }
 }
 .mdl-layout__tab-bar-container {

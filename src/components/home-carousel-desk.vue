@@ -8,7 +8,7 @@
     </div>
     <div class="film-wrap" >
       <transition-group name="swipe-left" mode="out-in">
-        <film v-for="film in carousel" :film="film" :device="device" :key="film.id" ></film>
+        <film v-for="film in carousel" :film="film" :key="film.id" ></film>
       </transition-group>
     </div>
   </div>
@@ -22,8 +22,7 @@ import Film from '../components/home-carousel-film.vue'
 export default {
   props: {
     films: Array,
-    ready: Boolean,
-    device: Boolean
+    ready: Boolean
   },
 
   data () {

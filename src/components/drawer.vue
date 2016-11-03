@@ -4,11 +4,11 @@
       <div class="mdl-grid" style="padding: 0;">
 
         <div class="mdl-cell mdl-cell--12-col" >
-          <span @click="auth" class="mdl-chip mdl-chip--contact">
+          <span @click="connectUser" class="mdl-chip mdl-chip--contact">
             <transition>
-              <span v-if="!connected" class="mdl-chip__contact mdl-color--deep-purple mdl-color-text--white">
+              <span v-if="!user.connected" class="mdl-chip__contact mdl-color--deep-purple mdl-color-text--white">
                 <transition>
-                  <i v-if="!connecting" class="fa fa-trello" aria-hidden="true"></i>
+                  <i v-if="!user.connecting" class="fa fa-trello" aria-hidden="true"></i>
                   <i v-else class="fa fa-cog fa-spin" aria-hidden="true"></i>
                 </transition>
               </span>
@@ -16,9 +16,9 @@
             </transition>
             
             <transition name="fade">
-              <span v-if="!connected && !connecting" class="mdl-chip__text">Conecte-se</span>
-              <span v-if="!connected && connecting" class="mdl-chip__text">Conectando...</span>
-              <span v-if="connected && !connecting" class="mdl-chip__text">{{user.nome[0].toUpperCase() + user.nome.slice(1)}}</span>
+              <span v-if="!user.connected && !user.connecting" class="mdl-chip__text">Conecte-se</span>
+              <span v-if="!user.connected && user.connecting" class="mdl-chip__text">Conectando...</span>
+              <span v-if="user.connected && !user.connecting" class="mdl-chip__text">{{user.nome[0].toUpperCase() + user.nome.slice(1)}}</span>
             </transition>
           </span>
         </div>
@@ -39,32 +39,27 @@
 <script>
 import Home from './home-drawer.vue'
 import Hipervideo from './hipervideo-drawer.vue'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   props: {
-    drawer: Boolean,
-    connected: Boolean,
     view: String
   },
 
-  data () {
-    return {
-      user: null,
-      connecting: false
-    }
-  },
+  computed: mapGetters([
+    'user',
+    'drawer',
+    'loaded'
+  ]),
 
-  watch: {
-    connected: function (val, oldVal) {
-      if (val) {
-        this.connecting = false
-      }
-    }
-  },
+  methods: mapActions([
+    'connectUser',
+    'openDrawer'
+  ]),
 
   created: function() {
     this.$nextTick( () => {
-      this.user = this.$root.$children[0].$refs.user._data
+      
     })
   },
 
@@ -74,25 +69,10 @@ export default {
     })
   },
 
-  methods: {
-    openDrawer () {
-      this.$emit('open-drawer')
-    },
-    connectTrello () {
-      this.connecting = true
-      this.$root.$children[0].$refs.user.connect()
-    },
-    disconnect () {
-      this.$emit('trello-disconnect')
-    },
-    auth () {
-      if (this.connected) {
-        this.disconnect()
-      } else {
-        this.connectTrello()
-      }
-    }
-  },
+  methods: mapActions([
+    'connectUser',
+    'openDrawer'
+  ]),
 
   components: {
     Home,

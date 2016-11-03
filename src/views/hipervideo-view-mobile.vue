@@ -1,11 +1,11 @@
 <template>
   <div class="hipervideo">
 
-    <div v-if="headers" id="player" ref="player">
+    <div v-if="hv.headers" id="player" ref="player">
 
       <div id="screen">
         <video id="video_player" ref="engine" controls="">
-          <source id="mp4" :src="headers.url + '_normal_baixa.mp4'" type="video/mp4">
+          <source id="mp4" :src="hv.headers.url + '_' + acessibilidade + '_' + qualidade + '.mp4'" type="video/mp4">
         </video>
       </div>
 
@@ -14,21 +14,26 @@
       <div aria-expanded="false" role="button" tabindex="0" class="mdl-layout__drawer-button" @click="openDrawer"><i class="material-icons">menu</i></div>
       <div class="mdl-grid">
         <div class="mdl-cell mdl-cell--1-col">
-          <div class="event_left"><i class="material-icons">keyboard_arrow_left</i></div>
+          <div v-if="index > 0" class="event_left" @click="downEvent"><i class="material-icons">keyboard_arrow_left</i></div>
         </div>
         <div class="mdl-cell mdl-cell--2-col">
-          <div class="event_up">Teste</div>
+          <transition name="fade" mode="out-in">
+            <div v-for="cont in content_blocks" class="event_up">{{cont.title}}</div>
+          </transition>
         </div>
         <div class="mdl-cell mdl-cell--1-col">
-          <div class="event_right"><i class="material-icons">keyboard_arrow_right</i></div>
+          <div v-if="video_load && index < eventsLenght - 1" class="event_right" @click="upEvent"><i class="material-icons">keyboard_arrow_right</i></div>
         </div>
       </div>
     </header>
-    <main v-if="headers" class="mdl-layout__content">
+    <main v-if="hv.headers" class="mdl-layout__content video">
       <div class="page-content">
         <div class="mdl-grid">
           <div class="mdl-cell mdl-cell--12-col">
-            <div>{{headers.descricao}}</div>
+            <transition name="body-fade" mode="out-in">
+              <div v-for="cont in content_blocks" v-html="textMarked"></div>
+            </transition>
+            
           </div>
         </div>
       </div>
@@ -53,33 +58,37 @@
 
 <script>
 import _ from 'underscore'
+import marked from 'marked'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  props: {
-    loaded: Boolean,
-    connected: Boolean,
-    hipervideos: Array,
-    device: Boolean
-  },
-
   data () {
     return {
-      headers: null,
-      plugins: null,
-      eventos: null,
-      cartelas: null,
-      video_load: false,
-      playing: false,
+      index: 0,
+      events_pass: 0,
+      textMarked: '',
       touch: false,
       touch_point: 0,
       touch_slide: 0,
       touch_time: 0,
       bottom_default: -480,
-      info_open: false,
-      info_offset: 0,
-      saiba_mais: false
+      info_offset: 0
     }
   },
+
+  computed: mapGetters([
+    'hv',
+    'drawer',
+    'playing',
+    'video_load',
+    'info_open',
+    'saiba_mais',
+    'content_blocks',
+    'conteudo',
+    'eventsLenght',
+    'acessibilidade',
+    'qualidade'
+  ]),
 
   watch: {
     playing: function (val, oldVal) {
@@ -92,7 +101,9 @@ export default {
     info_open: function (val, oldVal) {
       if (val) {
         this.info_offset = 480
-        this.saiba_mais = false
+        if (this.saiba_mais) {
+          this.$store.commit('SAIBA_MAIS', false)
+        }
       } else {
         this.info_offset = 0
       }
@@ -105,39 +116,51 @@ export default {
           this.bottom_default = -480
         }, 300)
       }
+    }, 
+    content_blocks: function (val, oldVal) {
+
+      if (val.lenght !== 0) {
+        this.index = val[0].id
+        this.textMarked = marked(val[0].fields.excerpt)
+        console.log(val)
+        if (this.events_pass < 2) {
+          this.events_pass++
+          setTimeout( () => {
+            this.showMais()
+          }, 1000)
+        }
+        
+      } 
     }
   },
 
   methods: {
-    getData (desc) {
-      return JSON.parse(desc)
-    },
-    getElement (data, element) {
-      var c = _.pluck(data, "name")
-      var ind = []
-      var elements = []
-      for (var i = 0; i < c.length; i++) {
-        if (c[i].split("-")[0] === element) {
-          ind.push(i)
-        }
-      }
-      for (var i = 0; i < ind.length; i++) {
-        var el = this.getData(data[ind[i]].desc)
-        el.card = data[ind[i]].id
-        el.id = parseInt(data[ind[i]].name.split("-")[1])
-        elements.push(el)
-      }
-      return elements
-    },
     openDrawer () {
-      this.$parent.$parent.drawer = true
-      console.log(this.$parent.drawer)
+      this.$store.dispatch('openDrawer')
+    },
+    play () {
+      this.$store.dispatch('play')
+    },
+    pause () {
+      this.$store.dispatch('pause')
+    },
+    videoLoad () {
+      this.$store.dispatch('videoLoad')
+    },
+    openInfo (info) {
+      this.$store.dispatch('openInfo', info)
     },
     showMais () {
-      this.saiba_mais = true
-      setTimeout( () => {
-        this.saiba_mais = false
-      },5000)
+      this.$store.dispatch('showMais')
+    },
+    attachEvents () {
+      this.$store.dispatch('attachEvents')
+    },
+    upEvent () {
+      this.$store.commit('ADD_EVENT', { id: this.index + 1 })
+    },
+    downEvent () {
+      this.$store.commit('ADD_EVENT', { id: this.index - 1 })
     },
     touchStart (e) {
       this.touch = true
@@ -150,33 +173,15 @@ export default {
     touchEnd (e) {
       this.touch = false
       if ( this.touch_slide > 100 ) {
-        this.info_open = true
+        this.openInfo(true)
       } else if ( this.touch_slide < -100 ) {
-        this.info_open = false
+        this.openInfo(false)
       } else if ( e.timeStamp - this.touch_time < 200 ) {
-        this.info_open = !this.info_open
+        this.openInfo(!this.info_open)
       }
       this.touch_point = 0
       this.touch_slide = 0
     }
-  },
-
-  created: function () {
-    this.$nextTick( () => {
-      Trello.get(`/lists/${this.$route.params.id}/cards`, (data) => {
-        let head = _.findWhere(data, { "name": "headers" })
-        this.headers = JSON.parse(head.desc)
-        this.plugins = this.getElement(data, 'plugins')
-        this.eventos = this.getElement(data, 'eventos')
-        this.cartelas = this.getElement(data, 'cartelas')
-      })
-    })
-  },
-
-  mounted: function () {
-    this.$nextTick( () => {
-      
-    })
   },
 
   updated: function() {
@@ -184,16 +189,30 @@ export default {
       componentHandler.upgradeDom()
       if (!this.video_load) {
         this.$refs.engine.load()
-        setTimeout( () => {
-          this.showMais()
-        }, 2000)
       }
     })
 
     this.$refs.engine.addEventListener('canplaythrough', (e) => {
-      this.video_load = true
+      this.videoLoad()
+      this.$store.commit('ADD_EVENT', { id: 0 })
     })
 
+    this.$refs.engine.addEventListener('loadeddata', (e) => {
+      this.attachEvents()
+    })
+
+    this.$refs.engine.addEventListener('play', (e) => {
+      this.play()
+    })
+
+    this.$refs.engine.addEventListener('pause', (e) => {
+      this.pause()
+    })
+
+  },
+
+  filters: {
+    mark: (w) => marked(w)
   }
 
 }
@@ -211,6 +230,11 @@ export default {
 }
 #screen {
   position: absolute;
+}
+.mdl-layout__content {
+  &.video {
+    height: 220px;
+  }
 }
 .mdl-layout__header {
   .mdl-layout__drawer-button {

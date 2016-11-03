@@ -15,11 +15,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 
 export default {
   props: {
-    film: Object,
-    device: Boolean
+    film: Object
   },
 
   data () {
@@ -29,6 +29,10 @@ export default {
       capa: ''
     }
   },
+
+  computed: mapGetters([
+    'device'
+  ]),
 
   watch: {
 
