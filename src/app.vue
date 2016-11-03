@@ -23,6 +23,7 @@ import Drawer from './components/drawer.vue'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
+  name: 'app',
   watch: {
     '$route' (to, from) {
       const toDepth = to.path.split('/')[1]

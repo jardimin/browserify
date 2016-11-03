@@ -20,6 +20,7 @@ import _ from 'underscore'
 import Film from '../components/home-carousel-film.vue'
 
 export default {
+  name: 'carousel-mobile',
   props: {
     films: Array,
     ready: Boolean

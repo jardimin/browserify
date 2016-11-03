@@ -148,7 +148,7 @@ export const pause = ({ commit }) => {
 }
 
 export const videoLoad = ({ commit }) => {
-  commit(types.MEDIA_LOAD)
+  commit(types.MEDIA_LOADED)
 }
 
 export const openInfo = ({ commit }, info ) => {

@@ -43,6 +43,7 @@ import _ from 'underscore'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
+  name: 'hv-desk',
   data () {
     return {
       video_load: false,

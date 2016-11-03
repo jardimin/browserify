@@ -11,6 +11,7 @@ import Mobile from './hipervideo-view-mobile.vue'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
+  name: 'hipervideo',
   computed: mapGetters([
     'user',
     'loaded',

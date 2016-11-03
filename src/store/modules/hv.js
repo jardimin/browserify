@@ -51,15 +51,23 @@ const mutations = {
   },
 
   [types.MEDIA_LOAD] (state) {
+    state.video_load = false
+  },
+
+  [types.MEDIA_LOADED] (state) {
     state.video_load = true
   },
 
   [types.INFO_OPEN] (state, { info }) {
     state.info_open = info
     if (info) {
+      state.pause_state = state.playing
+      state.playing = false
       let id = state.content_blocks[0].id
       let node = state.eventos.find(p => p.id === id)
       state.conteudo = node.conteudo
+    } else {
+      state.playing = state.pause_state
     }
   },
 

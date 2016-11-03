@@ -42,6 +42,7 @@ import Hipervideo from './hipervideo-drawer.vue'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
+  name: 'drawer',
   props: {
     view: String
   },

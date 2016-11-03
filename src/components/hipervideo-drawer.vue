@@ -79,6 +79,7 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
+  name: 'hv-drawer',
   computed: mapGetters([
     'hv',
     'qualidade',

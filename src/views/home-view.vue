@@ -41,7 +41,7 @@ import Info from '../components/home-body-info.vue'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-
+  name: 'home',
   data () {
     return {
       ready: false,

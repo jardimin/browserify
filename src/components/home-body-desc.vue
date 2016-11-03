@@ -11,6 +11,7 @@ import marked from 'marked'
 import _ from 'underscore'
 
 export default {
+  name: 'home-body-desc',
   props: {
     films: Array,
     atual: Object,
