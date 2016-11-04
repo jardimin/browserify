@@ -29,7 +29,7 @@ export default {
       touch_point: 0,
       touch_slide: 0,
       touch_time: 0,
-      bottom_default: -480,
+      bottom_default: -465,
       info_offset: 0
     }
   },
@@ -44,7 +44,7 @@ export default {
   watch: {
     info_open: function (val, oldVal) {
       if (val) {
-        this.info_offset = 480
+        this.info_offset = 465
         if (this.saiba_mais) {
           this.$store.commit('SAIBA_MAIS', false)
         }
@@ -54,10 +54,10 @@ export default {
     }, 
     saiba_mais: function (val, oldVal) {
       if (val) {
-        this.bottom_default = -460
+        this.bottom_default = -445
       } else {
         setTimeout( () => {
-          this.bottom_default = -480
+          this.bottom_default = -465
         }, 300)
       }
     }
@@ -104,7 +104,7 @@ export default {
 
 <style lang="scss">
 #info {
-  transition: bottom .2s;
+  transition: bottom .5s ease;
   position: fixed;
   bottom: -480px;
   width: 100%;
@@ -120,32 +120,35 @@ export default {
     }
   }
   .handle {
-    height: 32px;
+    height: 46px;
     width: 100%;
-    box-shadow: 0 6px 10px 0 rgba(0,0,0,.14),0 1px 18px 0 rgba(0,0,0,.12),0 -3px 5px -1px rgba(0,0,0,.2);
-    background: #D1C4E9;
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 -3px 5px -1px rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(0,0,0,.4);
+    border-bottom: 1px solid rgba(0,0,0,.4);
+    background-color: white;
     &.saiba {
       height: 45px;
     }
     .material-icons {
       transition: transform .3s;
       margin-left: 45%;
+      color: rgb(103,58,183);
       font-size: 40px;
-      margin-top: -3px;
+      margin-top: 3px;
     }
     .saiba-mais {
       height: 20px;
       width: 100%;
       font-size: 20px;
       text-align: center;
-      margin-top: -12px;
+      margin-top: -3px;
       padding-top: 1px;
       font-weight: 900;
-      background: red;
+      background: rgb(103,58,183);
       color: white;
       transition: background .2s, font-size .3s ease .2s, padding-top .3s ease .2s;
       &.saiba-enter-active, &.saiba-leave.saiba-leave-active {
-        background: red;
+        background: rgb(103,58,183);
         font-size: 20px;
         padding-top: 1px; 
       }

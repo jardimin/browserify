@@ -4,15 +4,15 @@
     <player></player>
 
     <header id="header" v-show="video_load" class="mdl-layout__header" style="display: block;">
-      <div aria-expanded="false" role="button" tabindex="0" class="mdl-layout__drawer-button" @click="openDrawer"><i class="material-icons">menu</i></div>
-      <div class="mdl-grid">
+      <div aria-expanded="false" role="button" tabindex="0" class="mdl-layout__drawer-button" @click="openDrawer"><i class="material-icons menu">menu</i></div>
+      <div class="mdl-grid menu">
         <div class="mdl-cell mdl-cell--1-col">
           <div v-if="index > 0" class="event_left" @click="downEvent"><i class="material-icons">keyboard_arrow_left</i></div>
         </div>
         <div class="mdl-cell mdl-cell--2-col">
-          <transition name="fade" mode="out-in">
-            <div v-for="cont in content_blocks" class="event_up">{{cont.title}}</div>
-          </transition>
+          <transition-group :name="'event-slide-'+slide">
+            <div v-if="content_blocks.length > 0" v-for="(cont, index) in content_blocks" class="event_up" :key="index">{{cont.title}}</div>
+          </transition-group>
         </div>
         <div class="mdl-cell mdl-cell--1-col">
           <div v-if="video_load && index < eventsLenght - 1" class="event_right" @click="upEvent"><i class="material-icons">keyboard_arrow_right</i></div>
@@ -23,9 +23,9 @@
       <div class="page-content">
         <div class="mdl-grid">
           <div class="mdl-cell mdl-cell--12-col">
-            <transition name="body-fade" mode="out-in">
-              <div v-for="cont in content_blocks" v-html="textMarked"></div>
-            </transition>
+            <transition-group name="body-fade" mode="out-in">
+              <div v-if="content_blocks.length > 0" v-for="(cont, index) in content_blocks" :key="index" v-html="textMarked"></div>
+            </transition-group>
             
           </div>
         </div>
@@ -57,7 +57,8 @@ export default {
     return {
       index: 0,
       events_pass: 0,
-      textMarked: ''
+      textMarked: '',
+      slide: 'right'
     }
   },
 
@@ -65,13 +66,15 @@ export default {
     'hv',
     'drawer',
     'video_load',
+    'device',
     'content_blocks',
     'eventsLenght'
   ]),
 
   watch: {
     content_blocks: function (val, oldVal) {
-      if (val.lenght !== 0) {
+      console.log(val.length)
+      if (val.length > 0) {
         this.index = val[0].id
         this.textMarked = marked(val[0].fields.excerpt)
         if (this.events_pass < 2) {
@@ -93,10 +96,12 @@ export default {
       this.$store.dispatch('showMais')
     },
     upEvent () {
-      this.$store.commit('ADD_EVENT', { id: this.index + 1 })
+      this.slide = 'right'
+      this.$store.dispatch('eventSlide', this.index + 1 )
     },
     downEvent () {
-      this.$store.commit('ADD_EVENT', { id: this.index - 1 })
+      this.slide = 'left'
+      this.$store.dispatch('eventSlide', this.index - 1 )
     }
   },
 
@@ -118,7 +123,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .mdl-layout__content {
   &.video {
     height: 220px;
@@ -130,13 +135,19 @@ export default {
       margin: 4px;
       position: fixed;
       border-radius: 50%;
-      transform: scale(.8);
+      background: white;
+      box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+      transform: scale(0.8);
     }
   }
 }
 #header {
-  min-height: 56px;
-  height: 56px;
+  min-height: 50px;
+  height: 50px;
+  display: block;
+  box-shadow: none;
+  border-bottom: 1px solid rgb(103,58,183);
+  background: white;
   .mdl-cell--1-col {
     @media (max-width: 479px) {
       width: calc(10% - 16px);
@@ -147,9 +158,71 @@ export default {
       width: calc(80% - 16px);
     }
   }
+  .event {
+    position: absolute;
+    z-index: 5;
+  }
+  .event_right {
+    @extend .event;
+  }
+  .event_left {
+    @extend .event;
+  }
   .event_up {
     text-align: center;
-    font-size: 20px;
+    font-size: 23px;
+    position: absolute;
+    width: 100%;
+    left: 0%;
+    color: #673ab7;
+    font-weight: 500;
+    margin-top: 5px;
+    transition: left .2s ease;
+    &.event-slide-right-enter-active {
+      left: 0%;
+    }
+    &.event-slide-right-enter {
+      left: -100%;
+    }
+    &.event-slide-right-leave {
+      left: 0%;
+    }
+    &.event-slide-right-leave-active {
+      left: 100%;
+    }
+    &.event-slide-left-enter-active {
+      left: 0%;
+    }
+    &.event-slide-left-enter {
+      left: 100%;
+    }
+    &.event-slide-left-leave {
+      left: 0%;
+    }
+    &.event-slide-left-leave-active {
+      left: -100%;
+    }
+  }
+  .material-icons {
+    &.menu {
+      color: rgb(103,58,183);
+    }
+  }
+  .mdl-grid {
+    &.menu {
+      position: absolute;
+      width: 100%;
+      left: 0;
+      background: #ffffff;
+      border-top: 1px solid white;
+      padding: 2px;
+      .mdl-cell--1-col {
+        margin: 9px 8px 5px 8px;
+      }
+      .material-icons {
+        color: rgb(103,58,183);
+      }
+    }
   }
 }
 #buffer {

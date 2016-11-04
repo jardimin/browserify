@@ -166,6 +166,7 @@ export const showMais = ({ commit }) => {
 
 export const attachEvents = ({ commit, state }) => {
   let popcorn = Popcorn("#video_player")
+  commit(types.EVENTS_ATTACHED)
 
   let timecodes = []
   for (var i = 0; i < state.hv.eventos.length; i++) {
@@ -179,12 +180,25 @@ export const attachEvents = ({ commit, state }) => {
       start: event.start,
       end: event.end,
       onStart: function() {
-        commit(types.ADD_EVENT , { id: event.id })
+        if (state.global.device) {
+          commit(types.REMOVE_EVENT, false)
+          setTimeout( () => {
+            commit(types.ADD_EVENT , { id: event.id })
+          },550)
+        } else {
+          commit(types.ADD_EVENT , { id: event.id })
+        }
       },
       onEnd: function() {
-        commit(types.REMOVE_EVENT, { device: state.global.device})
+        commit(types.REMOVE_EVENT, state.global.device)
       }
     });
     return event
   });
+}
+export const eventSlide = ({ commit, state }, id) => {
+  commit(types.REMOVE_EVENT, false)
+  setTimeout( () => {
+    commit(types.ADD_EVENT , { id: id })
+  },550)
 }

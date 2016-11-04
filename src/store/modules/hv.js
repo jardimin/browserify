@@ -12,6 +12,7 @@ const state = {
   info_open: false,
   saiba_mais: false,
   popcorn: null,
+  ev_attached: false,
   content_blocks: [],
   conteudo: null
 }
@@ -33,6 +34,7 @@ const mutations = {
     state.info_open = false
     state.saiba_mais = false
     state.popcorn = null
+    state.ev_attached = false
     state.content_blocks = []
     state.conteudo = null
   },
@@ -68,6 +70,7 @@ const mutations = {
       state.conteudo = node.conteudo
     } else {
       state.playing = state.pause_state
+      state.conteudo = null
     }
   },
 
@@ -75,23 +78,27 @@ const mutations = {
     state.saiba_mais = info
   },
 
-  [types.ADD_EVENT] (state, { id }) { 
+  [types.EVENTS_ATTACHED] (state) { 
+    state.ev_attached = true
+  },
+
+  [types.ADD_EVENT] (state, { id, device }) { 
     state.saiba_mais = false
-    addEvent(state, id)
+    if (state.content_blocks.lenght !== 0) {
+      state.content_blocks.splice(0)
+    }
+    addEvent(state, id, device)
   },
 
   [types.REMOVE_EVENT] (state, device) {
     if (!device) {
-      removeEvent(state)
+      state.content_blocks.splice(0)
     }
   }
 
 }
 
-function addEvent (state, id) {
-  if (state.content_blocks.lenght !== 0) {
-    state.content_blocks.shift()
-  }
+function addEvent (state, id, device) {
   let node = state.eventos.find(p => p.id === id)
   state.content_blocks.unshift({
     id: node.id,
@@ -102,10 +109,6 @@ function addEvent (state, id) {
     end: node.timecode.end,
     fields: node.component.fields
   })
-}
-
-function removeEvent (state) {
-  state.content_blocks.shift()
 }
 
 export default {

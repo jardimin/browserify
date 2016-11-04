@@ -43,14 +43,38 @@ export default {
     }
   },
 
-  computed: mapGetters([
-    'hv',
-    'playing',
-    'video_load',
-    'device',
-    'acessibilidade',
-    'qualidade'
-  ]),
+  computed: {
+    hv () {
+      return this.$store.getters.hv
+    },
+    playing () {
+      return this.$store.getters.playing
+    },
+    video_load () {
+      return this.$store.getters.video_load
+    },
+    device () {
+      return this.$store.getters.device
+    },
+    ev_attached () {
+      return this.$store.getters.ev_attached
+    },
+    acessibilidade () {
+      return this.$store.getters.acessibilidade
+    },
+    content_blocks () {
+      return this.$store.getters.content_blocks
+    },
+    qualidade () {
+      if (this.$store.getters.qualidade === 0) {
+        return 'baixa'
+      } else if (this.$store.getters.qualidade === 1) {
+        return 'media'
+      } if (this.$store.getters.qualidade === 2) {
+        return 'alta'
+      }
+    }
+  },
 
   watch: {
     playing: function (val, oldVal) {
@@ -102,11 +126,15 @@ export default {
 
     this.$refs.engine.addEventListener('canplaythrough', (e) => {
       this.videoLoad()
-      this.$store.commit('ADD_EVENT', { id: 0 })
+      if (this.content_blocks.length === 0) {
+        this.$store.commit('ADD_EVENT', { id: 0 })
+      }
     })
 
     this.$refs.engine.addEventListener('loadeddata', (e) => {
-      this.attachEvents()
+      if (!this.ev_attached) {
+        this.attachEvents()
+      }
     })
 
     this.$refs.engine.addEventListener('play', (e) => {

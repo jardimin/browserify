@@ -47,5 +47,7 @@ export default {
 </script>
 
 <style lang="scss">
-
+.hip_wrap {
+  overflow: hidden;
+}
 </style>

@@ -8,6 +8,7 @@ export const saiba_mais = state => state.hv.saiba_mais
 export const content_blocks = state => state.hv.content_blocks
 export const conteudo = state => state.hv.conteudo
 export const eventsLenght = state => state.hv.eventos.length
+export const ev_attached = state => state.hv.ev_attached
 
 export const board = state => state.global.board
 export const trelloId = state => state.global.trelloId
