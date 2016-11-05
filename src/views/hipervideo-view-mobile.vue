@@ -58,7 +58,7 @@ export default {
       index: 0,
       events_pass: 0,
       textMarked: '',
-      slide: 'right'
+      slide: 'right',
     }
   },
 

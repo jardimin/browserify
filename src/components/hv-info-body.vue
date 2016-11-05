@@ -18,13 +18,15 @@
             </a>
           </div>
         </header>
-        <main class="mdl-layout__content" id="content_main" style="height: 100%;">
+        <main class="mdl-layout__content" id="content_main" ref="content_main" style="height: 100%;">
           <div class="page-content" style="height: 100%;">
             <div class="mdl-grid" style="height: 100%; padding: 0;">
               <div class="mdl-cell mdl-cell--12-col" style="height: 100%; margin: 0;">
                 <div id="conteudo_info" style="padding:0;height: 100%;">
 
-                  <div transition="fade" ></div>
+                  <transition name="body-fade">
+                    <div :is="tab" :conteudo="conteudo"></div>
+                  </transition>
 
                 </div>
               </div>
@@ -40,6 +42,7 @@
 <script>
 import marked from 'marked'
 import { mapGetters, mapActions } from 'vuex'
+import Texto from './content/texto.vue'
 
 export default {
   name: 'hv-body',
@@ -72,6 +75,12 @@ export default {
     }
   },
 
+  mounted: function () {
+    this.$nextTick( () => {
+      
+    })
+  },
+
   updated: function() {
     this.$nextTick(function () {
       componentHandler.upgradeDom()
@@ -79,7 +88,7 @@ export default {
   },
 
   components: {
-    
+    Texto
   }
 
 }

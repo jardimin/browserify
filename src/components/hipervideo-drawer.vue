@@ -42,7 +42,7 @@
         <div class="mdl-grid" style="padding-top: 0;">
           <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0;">
 
-            <ul class="demo-list-control mdl-list acess" style="padding-top: 0; margin-top: 0;">
+            <ul class="demo-list-control mdl-list acess" style="padding-top: 0; margin-top: 0; padding-bottom: 0; margin-bottom: 0;">
               <li class="mdl-list__item">
                 <span class="mdl-list__item-primary-content">
                   Libras
@@ -71,6 +71,62 @@
 
     </div>
     <!-- Card Acessibilidade End-->
+
+    <!-- Card Cartelas Start -->
+    <hr>
+    <div class="section">
+
+      <div class="title">
+        <h4 class="name">Personas</h4>
+      </div>
+
+      <div class="">
+        <div class="mdl-grid" style="padding-top: 0;">
+          <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0;">
+
+            <span v-for="cartela in hv.cartelas" class="mdl-chip mdl-chip--contact" style="margin-top: 10px;">
+              <span class="mdl-chip__contact mdl-color--deep-purple mdl-color-text--white">
+                <i class="material-icons" style="margin-top: 10px;">account_circle</i>
+              </span>
+              
+              <span class="mdl-chip__text">{{cartela.title}}</span>
+
+            </span>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- Card Cartelas End-->
+
+    <!-- Card Eventos Start -->
+    <hr>
+    <div class="section">
+
+      <div class="title">
+        <h4 class="name">Eventos</h4>
+      </div>
+
+      <div class="">
+        <div class="mdl-grid" style="padding-top: 0;">
+          <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0;">
+
+            <span v-for="evento in hv.eventos" class="mdl-chip mdl-chip--contact" style="margin-top: 10px;">
+              <span class="mdl-chip__contact mdl-color--deep-purple mdl-color-text--white">
+                <i class="material-icons" style="margin-top: 10px;">explicit</i>
+              </span>
+              
+              <span class="mdl-chip__text">{{evento.title}}</span>
+
+            </span>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- Card Eventos End-->
 
   </div>
 </template>
