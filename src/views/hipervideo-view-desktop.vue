@@ -31,7 +31,7 @@
     </div>
     <transition name="fade">
       <div id="buffer" v-if="!video_load">
-        <i class="fa fa-refresh fa-spin refresher" aria-hidden="true"></i>
+        <img class="fa fa-refresh refresher" src="hv_3loading.gif">
       </div>
     </transition>
 
@@ -165,10 +165,10 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #player {
   width: 100%;
-  height: 202.5px;
+  height: auto;
   overflow: hidden;
   position: relative;
 }
@@ -264,7 +264,7 @@ export default {
 }
 #buffer {
   position: fixed;
-  background: rgba(0, 0, 0, 1);
+  background: #673ab7;
   height: 100%;
   width: 100%;
   top: 0;
@@ -282,10 +282,11 @@ export default {
   .refresher {
     position: absolute;
     color: white;
-    font-size: 50px !important;
+    font-size: 4em !important;
+    width: 4%;
     background: transparent;
-    left: 45%;
-    top: 40%;
+    left: 48.5%;
+    top: 45%;
   }
 }
 .video_load-enter-active, .video_load-leave {

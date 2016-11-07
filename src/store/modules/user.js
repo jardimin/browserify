@@ -7,7 +7,13 @@ const state = {
   user_board: '',
   nome: '',
   email: '',
-  img: ''
+  img: '',
+  camada: [
+    [],
+    [],
+    [],
+    []
+  ]
 }
 
 // mutations
@@ -42,7 +48,22 @@ const mutations = {
     state.nome = ''
     state.email = ''
     state.img = ''
-  }
+  },
+
+  [types.CAMADA_PUSH] (state, { obj, id }) {
+    let c = {
+      user: {
+        connected: false,
+        connecting: false,
+        user_board: '',
+        nome: '',
+        email: '',
+        img: ''
+      },
+      state: obj
+    }
+    state.camada[id].push(obj)
+  },
 }
 
 export default {
