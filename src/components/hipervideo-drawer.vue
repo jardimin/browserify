@@ -84,9 +84,9 @@
         <div class="mdl-grid" style="padding-top: 0;">
           <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0;">
 
-            <span v-for="cartela in hv.cartelas" class="mdl-chip mdl-chip--contact" style="margin-top: 10px;">
-              <span class="mdl-chip__contact mdl-color--deep-purple mdl-color-text--white">
-                <i class="material-icons" style="margin-top: 10px;">account_circle</i>
+            <span v-for="cartela in hv.cartelas" class="mdl-chip mdl-chip--contact persona" style="margin-top: 10px;" @click="openCartela(cartela.id)">
+              <span class="mdl-chip__contact mdl-color--deep-purple mdl-color-text--white" style="">
+                <img :src="cartela.thumb">
               </span>
               
               <span class="mdl-chip__text">{{cartela.title}}</span>
@@ -112,9 +112,10 @@
         <div class="mdl-grid" style="padding-top: 0;">
           <div class="mdl-cell mdl-cell--12-col" style="margin-top: 0;">
 
-            <span v-for="evento in hv.eventos" class="mdl-chip mdl-chip--contact" style="margin-top: 10px;">
+            <span v-for="evento in hv.eventos" class="mdl-chip mdl-chip--contact" style="margin-top: 10px;" @click="eventSeek(evento.timecode.start)">
               <span class="mdl-chip__contact mdl-color--deep-purple mdl-color-text--white">
-                <i class="material-icons" style="margin-top: 10px;">explicit</i>
+                <i v-if="evento.icon" class="material-icons" style="margin-top: 10px;">{{evento.icon}}</i>
+                <i v-else class="material-icons" style="margin-top: 10px;">explicit</i>
               </span>
               
               <span class="mdl-chip__text">{{evento.title}}</span>
@@ -158,6 +159,12 @@ export default {
       } else if (!obj.srcElement.checked) {
         this.$store.commit('CHANGE_ACESS', { acess: 'normal' })
       }
+    },
+    eventSeek (start) {
+      this.$store.dispatch('eventSeek', start)
+    },
+    openCartela (id) {
+      this.$store.dispatch('openCartela', id)
     }
   }
 
@@ -219,6 +226,13 @@ export default {
   .qual-div3 {
     @extend .qual-div; 
     text-align: right;
+  }
+  .persona {
+    border-radius: 15px;
+    .mdl-chip__contact {
+      border-radius: 8px;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    }
   }
 }
 </style>

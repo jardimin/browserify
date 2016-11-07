@@ -155,6 +155,22 @@ export const openInfo = ({ commit }, info ) => {
   commit(types.INFO_OPEN , { info })
 }
 
+export const openLink = ({ commit }, link ) => {
+  commit(types.VIEW_LINK , { link })
+}
+
+export const closeLink = ({ commit }) => {
+  commit(types.CLOSE_LINK)
+}
+
+export const openCartela = ({ commit }, id ) => {
+  commit(types.CARTELA_OPEN , { id })
+}
+
+export const closeCartela = ({ commit }) => {
+  commit(types.CARTELA_CLOSE)
+}
+
 export const showMais = ({ commit }) => {
   let info = true
   commit(types.SAIBA_MAIS , { info })
@@ -196,9 +212,39 @@ export const attachEvents = ({ commit, state }) => {
     return event
   });
 }
+export const attachCartelas = ({ commit, state }) => {
+  let popcorn = Popcorn("#video_player")
+
+  let timecodes = []
+  for (var i = 0; i < state.hv.cartelas.length; i++) {
+    var a = state.hv.cartelas[i].timecode
+    a.id = state.hv.cartelas[i].id
+    timecodes.push(a)
+  }
+
+  timecodes.map(function(cartela){
+    popcorn.code({
+      start: cartela.start,
+      end: cartela.end,
+      onStart: function() {
+        commit(types.ADD_CARTELA , { id: cartela.id })
+      },
+      onEnd: function() {
+        commit(types.REMOVE_CARTELA)
+      }
+    });
+    return event
+  });
+}
 export const eventSlide = ({ commit, state }, id) => {
   commit(types.REMOVE_EVENT, false)
   setTimeout( () => {
     commit(types.ADD_EVENT , { id: id })
   },550)
+}
+export const eventSeek = ({ commit, state }, start) => {
+  if (state.global.drawer) {
+    commit(types.CLOSE_DRAWER)
+  }
+  commit(types.EVENT_SEEK, { start })
 }

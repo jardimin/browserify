@@ -3,6 +3,13 @@
     <div class="mdl-layout__drawer" :class="{'is-visible': drawer}">
       <div class="mdl-grid" style="padding: 0;">
 
+        <div v-if="$route.path.split('/')[1] === 'hipervideo'" class="mdl-cell mdl-cell--12-col" >
+          <button class="mdl-button mdl-js-button" @click="voltar">
+            <i class="material-icons">arrow_back</i>
+            Voltar
+          </button>
+        </div>
+
         <div class="mdl-cell mdl-cell--12-col" >
           <span @click="connectUser" class="mdl-chip mdl-chip--contact">
             <transition>
@@ -53,10 +60,17 @@ export default {
     'loaded'
   ]),
 
-  methods: mapActions([
-    'connectUser',
-    'openDrawer'
-  ]),
+  methods: {
+    connectUser () {
+      this.$store.dispatch('connectUser')
+    },
+    openDrawer () {
+      this.$store.dispatch('openDrawer')
+    },
+    voltar () {
+      this.$router.push(`/home`)
+    }
+  },
 
   created: function() {
     this.$nextTick( () => {
@@ -65,15 +79,10 @@ export default {
   },
 
   updated: function() {
-    this.$nextTick(function () {
+    this.$nextTick( () => {
       componentHandler.upgradeDom()
     })
   },
-
-  methods: mapActions([
-    'connectUser',
-    'openDrawer'
-  ]),
 
   components: {
     Home,

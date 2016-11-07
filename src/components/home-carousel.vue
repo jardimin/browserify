@@ -1,14 +1,14 @@
-<template>
-  <div id="carousel-home">
+  <template>
+  <div id="carousel-home" :style="{ height: height + 'px'}">
     <div class="arrow-left" @click="slideLeft">
       <i class="material-icons">chevron_left</i>
     </div>
     <div class="arrow-right" @click="slideRight">
       <i class="material-icons">chevron_right</i>
     </div>
-    <div :style="{ marginLeft: margin_default + touch_slide + 'px'}" :class="{active: touch}" class="film-wrap" @touchstart="touchStart" @touchend="touchEnd" @touchmove="touchMove" >
-      <transition-group name="swipe-left">
-        <film v-for="film in carousel" :film="film" :key="film.id" ></film>
+    <div :style="[{ marginLeft: margin_default + touch_slide + 'px'},{ height: height + 'px'},{ width: width + 'px'}]" :class="{active: touch}" class="film-wrap" @touchstart="touchStart" @touchend="touchEnd" @touchmove="touchMove" >
+      <transition-group name="swipe-left" v-on:after-enter="" v-on:leave="">
+        <film v-for="(film, index) in carousel" :film="film" :key="film.id" :refs="index"></film>
       </transition-group>
     </div>
   </div>
@@ -28,6 +28,8 @@ export default {
 
   data () {
     return {
+      height: 0,
+      width: 1500,
       offset: 0,
       touch: false,
       touch_point: 0,
@@ -83,12 +85,23 @@ export default {
       }
       this.touch_point = 0
       this.touch_slide = 0
+    },
+    checkScreen () {
+      this.height = (window.innerWidth*43.8)/100
+      this.width = window.innerWidth * 4.166666666666667
+      this.margin_default = - window.innerWidth * 1.4555555555555555
     }
     
   },
 
+  created: function() {
+    this.$nextTick( () => {
+      this.checkScreen()
+    })
+  },
+
   updated: function() {
-    this.$nextTick(function () {
+    this.$nextTick( () => {
       componentHandler.upgradeDom()
     })
   },
@@ -115,10 +128,13 @@ $swipe-left-time: .5s;
     margin-top: 134%;
     margin-left: -10px;
     transition: transform .2s;
+    @media screen and (min-width: 480px) {
+      font-size: 100px;
+    }
   }
   .arrow {
     background: rgba(0,0,0,.2);
-    width: 40px;
+    width: 11%;
     height: 100%;
     position: absolute;
     cursor: pointer;
@@ -149,19 +165,18 @@ $swipe-left-time: .5s;
   }
   .film {
     height: 100%;
-    width: 280px;
+    width: 18.7%;
     float: left;
     border-right: 1px solid black;
     border-left: 1px solid black;
     background-size: contain;
     position: relative;
+    transition: width $swipe-left-time;
     &.swipe-left-enter-active, &.swipe-left-leave {
-      transition: width $swipe-left-time;
-      width: 280px;
+      width: 18.66%;
       overflow: hidden;
     }
     &.swipe-left-enter, &.swipe-left-leave-active {
-      transition: width $swipe-left-time;
       overflow: hidden;
       width: 0px;
     }

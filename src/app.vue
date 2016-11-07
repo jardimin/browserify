@@ -28,6 +28,9 @@ export default {
     '$route' (to, from) {
       const toDepth = to.path.split('/')[1]
       const fromDepth = from.path.split('/')[1]
+      if (this.drawer) {
+        this.openDrawer()
+      }
       if (toDepth !== fromDepth) {
         this.view = toDepth
         if (fromDepth === 'hipervideo') {
@@ -45,7 +48,8 @@ export default {
 
   computed: mapGetters([
     'user',
-    'loaded'
+    'loaded',
+    'drawer'
   ]),
 
   methods: mapActions([

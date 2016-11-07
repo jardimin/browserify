@@ -101,7 +101,7 @@ export default {
   },
 
   updated: function() {
-    this.$nextTick(function () {
+    this.$nextTick( () => {
       componentHandler.upgradeDom()
     })
   }

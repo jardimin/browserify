@@ -1,20 +1,12 @@
 <template>
 
-  <div id="info" :style="{bottom: bottom_default + touch_slide + info_offset +'px'}" :class="[{touch: touch},{open: info_open}]">
-    <div class="handle" @touchstart.prevent="touchStart" @touchend.prevent="touchEnd" @touchmove.prevent="touchMove" :class="{saiba: saiba_mais}">
-      <i class="material-icons open-key">keyboard_arrow_up</i>
-      <transition name="saiba">
-        <div v-if="saiba_mais" class="saiba-mais">SAIBA MAIS</div>
-      </transition>
+  <div id="comentarios" :style="{bottom: bottom_default + touch_slide + info_offset +'px'}" :class="[{touch: touch},{open: open}]">
+    <div class="handle" @touchstart.prevent="touchStart" @touchend.prevent="touchEnd" @touchmove.prevent="touchMove">
+      <i class="material-icons open-key2">keyboard_arrow_up</i>
+      <p>Comentarios</p>
     </div>
 
-    <conteudo></conteudo>
-    
-    <cartela v-if="!info_body"></cartela>
-
-    <transition name="link-fade">
-      <linkframe v-if="link"></linkframe>
-    </transition>
+    <comment-body></comment-body>
 
   </div>
 
@@ -22,72 +14,37 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-
-import Conteudo from './hv-info-body.vue'
-import Cartela from './hv-info-cartela.vue'
-import Linkframe from './hv-info-link.vue'
+import CommentBody from './comentarios-body.vue'
 
 export default {
-  name: 'hv-info',
+  name: 'hv-comentarios',
   data () {
     return {
-      info_body: true,
+      open: false,
       touch: false,
       touch_point: 0,
       touch_slide: 0,
       touch_time: 0,
-      bottom_default: -window.innerHeight + 48,
+      bottom_default: -window.innerHeight + 96,
       info_offset: 0
     }
   },
 
   computed: mapGetters([
-    'hv',
-    'info_open',
-    'saiba_mais',
-    'content_blocks',
-    'conteudo',
-    'link',
-    'cartela_open'
+    'content_blocks'
   ]),
 
   watch: {
-    saiba_mais: function (val, oldVal) {
+    open: function (val, oldVal) {
       if (val) {
-        this.bottom_default = -window.innerHeight + 68
+        this.info_offset = window.innerHeight - 150
       } else {
-        setTimeout( () => {
-          this.bottom_default = -window.innerHeight + 48
-        }, 300)
-      }
-    },
-    info_open: function (val, oldVal) {
-      if (val) {
-        this.info_offset = window.innerHeight - 48
-        if (this.saiba_mais) {
-          this.$store.commit('SAIBA_MAIS', false)
-        }
-      } else {
-        if (this.cartela_open) {
-          this.$store.dispatch('closeCartela')
-        }
-        this.info_body = true
         this.info_offset = 0
-      }
-    },
-    cartela_open: function (val, oldVal) {
-      if (val) {
-        this.info_body = false
-      } else {
-        this.info_body = true
       }
     }
   },
 
   methods: {
-    openInfo (info) {
-      this.$store.dispatch('openInfo', info)
-    },
     touchStart (e) {
       this.touch = true
       this.touch_point = e.changedTouches[0].clientY
@@ -99,11 +56,11 @@ export default {
     touchEnd (e) {
       this.touch = false
       if ( this.touch_slide > 100 ) {
-        this.openInfo(true)
+        this.open = true
       } else if ( this.touch_slide < -100 ) {
-        this.openInfo(false)
+        this.open = false
       } else if ( e.timeStamp - this.touch_time < 200 ) {
-        this.openInfo(!this.info_open)
+        this.open = !this.open
       }
       this.touch_point = 0
       this.touch_slide = 0
@@ -117,18 +74,16 @@ export default {
   },
 
   components: {
-    Conteudo,
-    Linkframe,
-    Cartela
+    CommentBody
   }
 
 }
 </script>
 
 <style lang="scss">
-#info {
+#comentarios {
   transition: bottom .5s ease;
-  position: fixed;
+  position: absolute;
   bottom: -480px;
   width: 100%;
   height: 100%;
@@ -138,7 +93,7 @@ export default {
     transition: none;
   }
   &.open {
-    .material-icons.open-key {
+    .material-icons.open-key2 {
       transform: rotate(180deg);
     }
   }
@@ -149,15 +104,20 @@ export default {
     border-top: 1px solid rgba(0,0,0,.4);
     border-bottom: 1px solid rgba(0,0,0,.4);
     background-color: white;
-    &.saiba {
-      height: 45px;
+    p {
+      margin-top: 13px;
+      float: left;
+      font-size: 20px;
+      color: #673ab7;
     }
     .material-icons {
       transition: transform .3s;
-      margin-left: 45%;
-      color: rgb(103,58,183);
-      font-size: 40px;
-      margin-top: 3px;
+      margin-left: 5px;
+      color: #673ab7;
+      font-size: 27px;
+      margin-right: 5px;
+      float: left;
+      margin-top: 11px;
     }
     .saiba-mais {
       height: 20px;

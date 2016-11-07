@@ -9,6 +9,11 @@ export const content_blocks = state => state.hv.content_blocks
 export const conteudo = state => state.hv.conteudo
 export const eventsLenght = state => state.hv.eventos.length
 export const ev_attached = state => state.hv.ev_attached
+export const seek = state => state.hv.seek
+export const cartela = state => state.hv.cartela
+export const cartela_open = state => state.hv.cartela_open
+export const link = state => state.hv.link
+export const pop = state => state.hv.pop
 
 export const board = state => state.global.board
 export const trelloId = state => state.global.trelloId

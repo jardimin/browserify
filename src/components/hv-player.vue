@@ -1,6 +1,6 @@
 <template>
 
-  <div v-if="hv.headers" id="player" ref="player">
+  <div v-if="hv.headers" id="player" ref="player" :style="{height: height + 'px'}">
 
     <div id="screen">
       <video id="video_player" ref="engine" controls="">
@@ -27,6 +27,12 @@
       </div>
     </div>
 
+    <transition name="cartela">
+      <div v-if="cartela" id="cartela_wraper" @click="openCartela(cartela.id)">
+        <p id="cartela_nome">{{cartela.title}}</p>
+      </div>
+    </transition>
+
   </div>
 
 </template>
@@ -38,6 +44,7 @@ export default {
   name: 'player',
   data () {
     return {
+      height: 0,
       timecode: 0,
       timecodeAntigo: 0
     }
@@ -65,6 +72,12 @@ export default {
     content_blocks () {
       return this.$store.getters.content_blocks
     },
+    cartela () {
+      return this.$store.getters.cartela
+    },
+    seek () {
+      return this.$store.getters.seek
+    },
     qualidade () {
       if (this.$store.getters.qualidade === 0) {
         return 'baixa'
@@ -89,6 +102,11 @@ export default {
     },
     qualidade: function (val, oldVal) {
       this.updateVideo()
+    },
+    seek: function (val, oldVal) {
+      console.log(val)
+      this.$refs.engine.currentTime = val
+      this.play()
     }
   },
 
@@ -105,6 +123,12 @@ export default {
     attachEvents () {
       this.$store.dispatch('attachEvents')
     },
+    attachCartelas () {
+      this.$store.dispatch('attachCartelas')
+    },
+    openCartela (id) {
+      this.$store.dispatch('openCartela', id)
+    },
     updateVideo () {
       this.$store.commit('MEDIA_LOAD')
       this.timecode = this.$refs.engine.currentTime
@@ -116,8 +140,14 @@ export default {
     }
   },
 
+  created: function () {
+    this.$nextTick( () => {
+      this.height = (window.innerWidth*9)/16
+    })
+  },
+
   updated: function() {
-    this.$nextTick(function () {
+    this.$nextTick( () => {
       componentHandler.upgradeDom()
       if (!this.video_load) {
         this.$refs.engine.load()
@@ -134,6 +164,7 @@ export default {
     this.$refs.engine.addEventListener('loadeddata', (e) => {
       if (!this.ev_attached) {
         this.attachEvents()
+        this.attachCartelas()
       }
     })
 
@@ -162,5 +193,27 @@ export default {
 }
 #screen {
   position: absolute;
+}
+#cartela_wraper {
+  transition: bottom .4s ease;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: white;
+  width: 100%;
+  height: 45px;
+  background: #673ab7;
+  &.cartela-enter-active, &.cartela-leave.cartela-leave-active {
+    bottom: 0;
+  }
+  &.cartela-leave-active, &.cartela-enter {
+    bottom: -45px;
+  }
+  #cartela_nome {
+    margin-bottom: 0;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 20px;
+  }
 }
 </style>

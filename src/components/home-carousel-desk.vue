@@ -8,7 +8,7 @@
     </div>
     <div class="film-wrap" >
       <transition-group name="swipe-left" mode="out-in">
-        <film v-for="film in carousel" :film="film" :key="film.id" ></film>
+        <film v-for="film in carousel" :film="film" :key="film.id" :width="width"></film>
       </transition-group>
     </div>
   </div>
@@ -28,6 +28,7 @@ export default {
 
   data () {
     return {
+      width: '100%',
       length: this.films.length,
       index: 0,
       carousel: []
@@ -72,7 +73,7 @@ export default {
   },
 
   updated: function() {
-    this.$nextTick(function () {
+    this.$nextTick( () => {
       componentHandler.upgradeDom()
     })
   },

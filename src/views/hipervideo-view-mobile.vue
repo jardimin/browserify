@@ -19,10 +19,10 @@
         </div>
       </div>
     </header>
-    <main v-if="hv.headers" class="mdl-layout__content video">
+    <main v-if="hv.headers" class="mdl-layout__content video" :style="{height: main_height + 'px'}">
       <div class="page-content">
         <div class="mdl-grid">
-          <div class="mdl-cell mdl-cell--12-col">
+          <div id="excerpt" class="mdl-cell mdl-cell--12-col">
             <transition-group name="body-fade" mode="out-in">
               <div v-if="content_blocks.length > 0" v-for="(cont, index) in content_blocks" :key="index" v-html="textMarked"></div>
             </transition-group>
@@ -55,6 +55,7 @@ export default {
   name: 'hv-mobile',
   data () {
     return {
+      main_height: 200,
       index: 0,
       events_pass: 0,
       textMarked: '',
@@ -68,16 +69,16 @@ export default {
     'video_load',
     'device',
     'content_blocks',
-    'eventsLenght'
+    'eventsLenght',
+    'saiba_mais'
   ]),
 
   watch: {
     content_blocks: function (val, oldVal) {
-      console.log(val.length)
       if (val.length > 0) {
         this.index = val[0].id
         this.textMarked = marked(val[0].fields.excerpt)
-        if (this.events_pass < 2) {
+        if (this.events_pass < 6 && !this.saiba_mais) {
           this.events_pass++
           setTimeout( () => {
             this.showMais()
@@ -102,12 +103,27 @@ export default {
     downEvent () {
       this.slide = 'left'
       this.$store.dispatch('eventSlide', this.index - 1 )
+    },
+    openLink (link) {
+      this.$store.dispatch('openLink', link)
     }
   },
 
+  mounted: function () {
+    this.$nextTick( () => {
+      this.main_height = window.innerHeight - 47 - 50 - ((window.innerWidth*9)/16)
+    })
+  },
+
   updated: function() {
-    this.$nextTick(function () {
+    this.$nextTick( () => {
       componentHandler.upgradeDom()
+      setTimeout( () => {
+        $('#excerpt a').on('click', (e) => {
+          e.preventDefault()
+          this.openLink(e.currentTarget.href)
+        })
+      }, 100)
     })
   },
 
@@ -149,12 +165,12 @@ export default {
   border-bottom: 1px solid rgb(103,58,183);
   background: white;
   .mdl-cell--1-col {
-    @media (max-width: 479px) {
+    @media (max-width: 768px) {
       width: calc(10% - 16px);
     }
   }
   .mdl-cell--2-col {
-    @media (max-width: 479px) {
+    @media (max-width: 768px) {
       width: calc(80% - 16px);
     }
   }
@@ -227,7 +243,7 @@ export default {
 }
 #buffer {
   position: fixed;
-  background: rgba(0, 0, 0, 1);
+  background: rgb(103,58,183);
   height: 100%;
   width: 100%;
   top: 0;

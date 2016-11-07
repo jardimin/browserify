@@ -18,10 +18,10 @@
             </a>
           </div>
         </header>
-        <main class="mdl-layout__content" id="content_main" ref="content_main" style="height: 100%;">
+        <main class="mdl-layout__content" id="content_main" ref="content_main" style="height: 300px;">
           <div class="page-content" style="height: 100%;">
             <div class="mdl-grid" style="height: 100%; padding: 0;">
-              <div class="mdl-cell mdl-cell--12-col" style="height: 100%; margin: 0;">
+              <div class="mdl-cell mdl-cell--12-col" style="height: 100%; margin: 0; width: 100%;">
                 <div id="conteudo_info" style="padding:0;height: 100%;">
 
                   <transition name="body-fade">
@@ -33,6 +33,9 @@
             </div>
           </div>
         </main>
+
+        <comentarios></comentarios>
+
       </div>
     </div>
   </transition>
@@ -43,6 +46,12 @@
 import marked from 'marked'
 import { mapGetters, mapActions } from 'vuex'
 import Texto from './content/texto.vue'
+import Links from './content/links.vue'
+import Videos from './content/videos.vue'
+import Mapa from './content/mapa.vue'
+import Graficos from './content/databars.vue'
+import Imagens from './content/imagens.vue'
+import Comentarios from './content/comentarios.vue'
 
 export default {
   name: 'hv-body',
@@ -55,8 +64,7 @@ export default {
         videos: 'video_library',
         imagens: 'photo_library',
         mapa: 'map',
-        graficos: 'pie_chart',
-        comentarios: 'forum'
+        graficos: 'pie_chart'
       }
     }
   },
@@ -75,20 +83,20 @@ export default {
     }
   },
 
-  mounted: function () {
-    this.$nextTick( () => {
-      
-    })
-  },
-
   updated: function() {
-    this.$nextTick(function () {
+    this.$nextTick( () => {
       componentHandler.upgradeDom()
     })
   },
 
   components: {
-    Texto
+    Texto,
+    Links,
+    Videos,
+    Mapa,
+    Graficos,
+    Imagens,
+    Comentarios
   }
 
 }
@@ -108,6 +116,11 @@ export default {
 }
 .info-body {
   transition: opacity .5s ease .5s;
+  .mdl-layout {
+    height: calc(100% - 90px);
+    overflow-x: visible;
+    overflow-y: visible;
+  }
 }
 .info-menu {
   overflow: hidden;
@@ -119,12 +132,20 @@ export default {
     height: 56px;
     min-height: 56px;
   }
+  #comentarios {
+    transition: .3s ease .5s !important;
+    bottom: calc(-100% + 5px) !important;
+  }
 }
 .info-nav-grow-leave-active, .info-nav-grow-enter {
   opacity: 0;
   .info-menu {
     height: 0;
     min-height: 0;
+  }
+  #comentarios {
+    transition: .3s !important;
+    bottom: calc(-100% - 32px) !important;
   }
 }
 </style>

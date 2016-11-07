@@ -42,7 +42,13 @@ const mutations = {
 
   [types.HIPER_PUSH] (state, { h }) {
     state.hipervideos.push(h)
-  }
+  },
+
+  [types.CARTELA_OPEN] (state, { id }) {
+    if (state.drawer) {
+      state.drawer = false
+    }
+  },
 }
 
 export default {

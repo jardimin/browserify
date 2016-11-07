@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "watchify": "watchify -vd -p browserify-hmr -e src/main.js -o dist/build.js",
-    "serve": "http-server -o -c 1 -a 10.10.0.180",
+    "serve": "http-server -o -c 1 -a 192.168.0.12",
     "dev": "npm-run-all --parallel watchify serve",
     "lint": "eslint --ext .js,.vue src test/unit",
     "test": "karma start karma.conf.js",
@@ -20,16 +20,18 @@
   "dependencies": {
     "blueimp-md5": "^2.4.0",
     "hellojs": "^1.14.0",
+    "leaflet": "^1.0.1",
     "marked": "^0.3.6",
     "node-trello": "^1.1.2",
     "underscore": "^1.8.3",
-    "vue": "^2.0.1",
+    "vue": "^2.0.5",
     "vue-router": "^2.0.0",
     "vuex": "^2.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
     "babel-plugin-transform-runtime": "^6.0.0",
+    "babel-polyfill": "^6.16.0",
     "babel-preset-es2015": "^6.0.0",
     "babel-preset-stage-2": "^6.0.0",
     "babel-runtime": "^6.0.0",

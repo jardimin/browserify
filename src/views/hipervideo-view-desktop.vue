@@ -145,7 +145,7 @@ export default {
   },
 
   updated: function() {
-    this.$nextTick(function () {
+    this.$nextTick( () => {
       componentHandler.upgradeDom()
       if (!this.video_load) {
         this.$refs.engine.load()
