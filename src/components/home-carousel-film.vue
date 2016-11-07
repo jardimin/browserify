@@ -82,6 +82,9 @@ export default {
         transition: bottom .5s, opacity .3s ease .1s;
         bottom: 0;
         opacity: 1;
+        @media screen and (min-width: 1440px) {
+          bottom: 165px;
+        }
       }
       .play {
         transition: opacity .3s ease .4s;
@@ -111,6 +114,11 @@ export default {
       top: 30px;
       z-index: 2;
       left: 30px;
+      @media screen and (min-width: 1440px) {
+        img {
+          width: 150%;
+        }
+      }
     }
     .capa {
       position: absolute;
@@ -121,6 +129,19 @@ export default {
       left: 450px;
       img {
         width: 100%;
+      }
+      @media screen and (min-width: 1440px) {
+        bottom: 165px;
+        left: 380px;
+        img {
+          width: 130%;
+        }
+      }
+      @media screen and (min-width: 1920px) {
+        left: 700px;
+        img {
+          width: 130%;
+        }
       }
     }
     .play {

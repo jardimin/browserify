@@ -1,5 +1,5 @@
 <template>
-  <div class="hip_wrap">
+  <div class="hip_wrap" style="height: 100%;">
     <div :is="device ? 'mobile' : 'desktop' " :loaded="loaded" :connected="user.connected" :hipervideos="hipervideos" :device="device" ref="hv"></div>
   </div>
 </template>
