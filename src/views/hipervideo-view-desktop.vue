@@ -1,9 +1,9 @@
 <template>
-  <div class="hipervideo">
+  <div class="hipervideo" style="height: 100%;">
 
-    <div v-if="hv.headers" id="player" @touchstart="touchStart" @touchend="touchEnd" @touchmove="touchMove" ref="player">
+    <div v-if="hv.headers" id="player" @touchstart="touchStart" @touchend="touchEnd" @touchmove="touchMove" ref="player" style="height: 100%;">
 
-      <div id="screen">
+      <div id="screen" style="height: 100%; width: 100%;">
         <video id="video_player" ref="engine">
           <source id="mp4" :src="hv.headers.url + '_mobile.m4v'" type="video/mp4">
         </video>
@@ -173,22 +173,23 @@ export default {
   position: relative;
 }
 #status {
-  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
   height: 100%;
-  position: absolute;
-  background: rgba(0,0,0,.3);
-  z-index: 0;
-  opacity: 1;
-  transition: opacity .5s;
+  background: rgba(0,0,0,.5);
+  z-index: -99;
+  transition: all 0.5s;
+  width: 100%;
   &.hide {
     opacity: 0;
   }
   .play_pause {
-    color: white;
-    font-size: 65px;
-    top: 33%;
+    color: black;
+    font-size: 10em;
+    top: 40%;
     position: absolute;
-    left: 40%;
+    left: 47.5%;
     opacity: .5;
   }
   .play {
@@ -208,7 +209,14 @@ export default {
   width: 100%;
 }
 #screen {
-  position: absolute;
+  background-size: cover;
+  height: auto;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  transition: all 0.5s ease 0s;
+  z-index: -100;
+  opacity: 1;
 }
 #video_controls {
   width: 100%;

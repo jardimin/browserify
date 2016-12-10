@@ -1,5 +1,5 @@
 <template>
-  <div id="app" allowfullscreen="true">
+  <div id="app" allowfullscreen="true" style="height: 100%;">
 
     <transition name="fade">
       <div v-if="!loaded" class="loader">
@@ -12,7 +12,7 @@
     </transition>
 
     <transition :name="view === 'home' ? 'fade' : 'hiper'" mode="out-in">
-      <router-view v-if="loaded" class="view" ref="view"></router-view>
+      <router-view v-if="loaded" class="view" ref="view"  style="height: 100%;"></router-view>
     </transition>
     
   </div>

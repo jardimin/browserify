@@ -89,17 +89,17 @@ export default {
 
 $swipe-left-time: .5s;
 #carousel-home {
-  @media screen and (min-width: 1024px) {
+  @media screen and (min-width: 768px) {
     height: 100%;
     position: absolute;
   }
   .material-icons {
-    @media screen and (min-width: 1024px) {
+    @media screen and (min-width: 768px) {
       font-size: 90px;
     }
   }
   .arrow {
-    @media screen and (min-width: 1024px) {
+    @media screen and (min-width: 768px) {
       bottom: 0;
       width: 60px;
       z-index: 2;
@@ -110,7 +110,7 @@ $swipe-left-time: .5s;
   }
   .arrow-left {
     @extend .arrow;
-    @media screen and (min-width: 1024px) {
+    @media screen and (min-width: 768px) {
       height: 50%;
       background: rgba(0,0,0,0);
       .material-icons {
@@ -121,7 +121,7 @@ $swipe-left-time: .5s;
   }
   .arrow-right {
     @extend .arrow;
-    @media screen and (min-width: 1024px) {
+    @media screen and (min-width: 768px) {
       background: rgba(0, 0, 0, 0.8);
       .material-icons {
         margin-top: 446%;
@@ -135,26 +135,26 @@ $swipe-left-time: .5s;
     }
   }
   .film-wrap {
-    @media screen and (min-width: 1024px) {
+    @media screen and (min-width: 768px) {
       height: 100%;
       width: 100%;
       margin-left: 0 !important;
     }
   }
   .film {
-    @media screen and (min-width: 1024px) {
+    @media screen and (min-width: 768px) {
       width: 100%;
       background-size: 100% !important;
       position: absolute;
     }
     &.swipe-left-enter-active, &.swipe-left-leave {
-      @media screen and (min-width: 1024px) {
+      @media screen and (min-width: 768px) {
         transition: opacity $swipe-left-time !important;
         width: 100% !important;
       }
     }
     &.swipe-left-enter, &.swipe-left-leave-active {
-      @media screen and (min-width: 1024px) {
+      @media screen and (min-width: 768px) {
         transition: opacity $swipe-left-time;
         width: 100%;
       }

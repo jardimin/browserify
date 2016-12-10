@@ -133,7 +133,7 @@ export default {
 <style lang="scss">
 header#header {
   position: relative;
-  @media screen and (min-width: 1024px) {
+  @media screen and (min-width: 768px) {
     position: absolute;
     top: 40%;
     padding-left: 3% !important;
@@ -144,16 +144,16 @@ header#header {
 }
 .mdl-layout__tab-bar-container {
   height: 56px;
-  @media screen and (min-width: 1024px) {
+  @media screen and (min-width: 768px) {
     height: 64px;
   }
   .mdl-layout__tab {
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: 768px) {
       padding: 4px 12px;
     }
   }
   .mdl-layout__tab-bar {
-    @media screen and (min-width: 1024px) {
+    @media screen and (min-width: 768px) {
       padding-top: 10px;
       .mdl-layout__tab {
         height: 54px;
@@ -166,7 +166,7 @@ header#header {
     height: 50px;
   }
 }
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 768px) {
   main {
     position: absolute !important;
     top: 49%;
@@ -182,9 +182,14 @@ header#header {
     overflow: hidden;
   }
 }
-@media screen and (min-width: 1600px) {
+@media screen and (min-width: 1440px) {
   main {
     top: 47%;
+  }
+}
+@media screen and (device-aspect-ratio: 4/3) {
+  main {
+    top: 48%;
   }
 }
 
@@ -198,7 +203,7 @@ $appear: .3s ease 1.5s;
   height: 56px;
   min-height: 56px;
   overflow: hidden;
-  @media screen and (min-width: 1024px) {
+  @media screen and (min-width: 768px) {
     transition: width .5s;
     height: 64px;
     min-height: 64px;
@@ -209,7 +214,7 @@ $appear: .3s ease 1.5s;
   overflow: hidden;
   height: 0;
   min-height: 0;
-  @media screen and (min-width: 1024px) {
+  @media screen and (min-width: 768px) {
     transition: width .5s;
     height: 64px;
     min-height: 64px;
@@ -244,7 +249,7 @@ $appear: .3s ease 1.5s;
     transition: height $swipe-top-2-time;
     height: 157.5px;
     overflow: hidden;
-    @media screen and (min-width: 1024px) {
+    @media screen and (min-width: 768px) {
       transition: opacity $swipe-top-2-time;
       background-size: 100% !important;
       position: absolute;
@@ -257,7 +262,7 @@ $appear: .3s ease 1.5s;
     transition: height $swipe-top-2-time;
     overflow: hidden;
     height: 0px;
-    @media screen and (min-width: 1024px) {
+    @media screen and (min-width: 768px) {
       transition: opacity $swipe-top-2-time;
       background-size: 100% !important;
       position: absolute;
